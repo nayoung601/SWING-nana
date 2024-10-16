@@ -17,7 +17,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarStyle: {
           backgroundColor: 'white',
-          borderTopWidth: 10,
+          borderTopWidth: 0,
           height: 75,
           paddingBottom: 20,
         },
@@ -26,21 +26,21 @@ export default function TabLayout() {
         headerTitleAlign: 'left', 
         headerTitle: () => (
           <View style={styles.headerContainer}>
-            <Text>"엄마마"</Text>
+            <Text>엄마마</Text>
             {/* <Text><ShowName name="엄마마" /></Text>  */}
           </View>
         ),
-        headerRight: () => (
-          <View style={styles.headerRight}>
-            <TouchableOpacity onPress={() => navigation.navigate('notify')}>
-              <TabBarIcon name="notifications" color={Colors[colorScheme ?? 'light'].tint} />
-            </TouchableOpacity>
+        // headerRight: () => (
+        //   <View style={styles.headerRight}>
+        //     <TouchableOpacity onPress={() => navigation.navigate('notify')}>
+        //       <TabBarIcon name="notifications" color={Colors[colorScheme ?? 'light'].tint} />
+        //     </TouchableOpacity>
             
-            <TouchableOpacity onPress={() => navigation.navigate('setting')}>
-              <TabBarIcon name="settings" color={Colors[colorScheme ?? 'light'].tint} />
-            </TouchableOpacity>
-          </View>
-        ),
+        //     <TouchableOpacity onPress={() => navigation.navigate('setting')}>
+        //       <TabBarIcon name="settings" color={Colors[colorScheme ?? 'light'].tint} />
+        //     </TouchableOpacity>
+        //   </View>
+        // ),
       }}>
       <Tabs.Screen
         name="index"
@@ -63,7 +63,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="health"
         options={{
-          title: '건강 기록부',
+          title: '건강 캘린더',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'heart' : 'heart-outline'} color={color} />
           ),
