@@ -18,27 +18,33 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
-    public UserEntity findByProviderId(String providerId) {
-        return userRepository.findByProviderId(providerId);
-    }
-
     public UserData findByProvider() {
+        //SecurityContextHolder를 통해 현재 인증된 사용자의 정보를 Authentication에 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("authentication : " + authentication);
+
+        //인증정보가 있고 인증된 사용자라면 if문 내용실행
         if (authentication != null && authentication.isAuthenticated()) {
             // 현재 인증된 사용자의 providerId를 가져옴
             CustomOAuth2User userDetails = (CustomOAuth2User) authentication.getPrincipal();
+
             String providerId = userDetails.getProviderId(); // CustomOAuth2User에서 providerId를 가져온다고 가정
+
+            //해당 providerId DB에 접근해서 UserEntity정보를 가져옴
             UserEntity user = userRepository.findByProviderId(providerId);
             log.info("user.getFamilyRole : " + user.getFamilyRole());
+
+            //해당 유저의 Name과 FamilyRole 객체를 생성해서 리턴해줌
             return new UserData(user.getName(), user.getFamilyRole());
 
         }
+        //if문을 실행하지 못하였을 경우
         return null;
     }
-
+    //프론트에서 받아온 추가정보를 이용해서 기존 사용자 정보 업데이트하는 코드
     public Optional<UserEntity> getExtraInfo(UserExtraInfoDTO userExtraInfoDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("authentication : " + authentication);

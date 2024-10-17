@@ -18,7 +18,9 @@ public class UserExtraInfoController {
 
     private final UserService userService;
 
-    @PostMapping("/api/extrainfo")
+
+
+    @PostMapping("/api/extrainfo") // 유저의 추가 정보를 받아오는 컨트롤러
     public ResponseEntity<UserEntity> saveUserExtraInfo(@RequestBody UserExtraInfoDTO userExtraInfoDTO) {
             Optional<UserEntity> extraInfo = userService.getExtraInfo(userExtraInfoDTO);
 

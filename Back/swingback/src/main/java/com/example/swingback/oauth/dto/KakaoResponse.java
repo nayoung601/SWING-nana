@@ -12,13 +12,13 @@ public class KakaoResponse implements OAuth2Response{
         this.attribute = attribute;
     }
 
-    @Override
+    @Override//제공자 (Ex. naver, google, ...)
     public String getProvider() {
 
         return "kakao";
     }
 
-    @Override
+    @Override//제공자에서 발급해주는 아이디(번호)
     public String getProviderId() {
 
         return attribute.get("id").toString();

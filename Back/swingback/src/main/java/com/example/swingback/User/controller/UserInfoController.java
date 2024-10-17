@@ -19,6 +19,8 @@ public class UserInfoController {
 
     @GetMapping("/api/main")
     public UserInfo getUserInfo() {
+
+        //SecurityContextHolder를 사용해서 현재 로그인한 이용자 정보 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 사용자의 인증 정보를 가져와서 반환
@@ -26,12 +28,14 @@ public class UserInfoController {
         return new UserInfo(name);
     }
 
+    
+    //현재 로그인한 ProviderId를 통해서 유저를 인증하고 쿠키생성하기 위한 컨트롤러
+    // UserData에 familyRole을 포함시켜서 null이면 추가정보 입력시키고  null이 아니면 main페이지로 이동시키는 용도임
     @GetMapping("/api/userdata")
     public ResponseEntity<UserData> getUserData() {
         UserData userData = userService.findByProvider();
         return (userData != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(userData) :
-    //            ResponseEntity.ok(userData):
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 }
