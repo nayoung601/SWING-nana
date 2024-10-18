@@ -1,21 +1,47 @@
-// app/(auth)/login.js
-import { Text, View, Button } from 'react-native';
-import { useRouter } from 'expo-router';
+import React from 'react';
+import { View, Text ,Image, TouchableOpacity, StyleSheet } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 
 export default function Login() {
-  const router = useRouter();
+  const handleButtonClickKaKao = async () => {
+    await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/kakao');
+  };
 
-  const handleLogin = () => {
-    // 로그인 로직 구현
-    // 로그인 성공 시 메인 탭으로 이동
-    router.replace('/(main)/home');
+  const handleButtonClickNaver = async () => {
+    await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/naver');
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>로그인 화면</Text>
-      <Button title="로그인" onPress={handleLogin} />
-      <Button title="회원가입" onPress={() => router.push('/(auth)/signup')} />
+    <View style={styles.container}>
+      <Text style={styles.title}>WIN;C</Text>
+
+      <TouchableOpacity onPress={handleButtonClickKaKao} style={styles.button}>
+        <Image source={require('../../assets/images/kakao_login.png')} style={styles.buttonImage} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleButtonClickNaver} style={styles.button}>
+        <Image source={require('../../assets/images/naver_login.png')} style={styles.buttonImage} />
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    marginBottom: 50,
+  },
+  button: {
+    marginBottom: 20,
+  },
+  buttonImage: {
+    width: 200, // 이미지의 실제 크기로 조정 (가로 크기)
+    height: 50,  // 이미지의 실제 크기로 조정 (세로 크기)
+  },
+});
