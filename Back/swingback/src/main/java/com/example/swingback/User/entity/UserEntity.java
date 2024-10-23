@@ -30,7 +30,7 @@ public class UserEntity {
 
     @ManyToOne
     @JoinColumn(name = "family_id", unique = true) // 가족 아이디 (FK)
-    private FamilyEntity familyId;
+    private FamilyEntity family;
 
     @Column(name = "family_role")  // 가족 구성원
     private String familyRole;
@@ -56,4 +56,7 @@ public class UserEntity {
         this.role = role;
     }
 
+    public void updateFamily(FamilyEntity familyEntity) {
+        this.family = familyEntity;
+    }
 }

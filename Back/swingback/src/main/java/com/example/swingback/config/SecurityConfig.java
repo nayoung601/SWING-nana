@@ -27,7 +27,8 @@ public class SecurityConfig {
                                 "/oauth2/**",
                                 "/api/main",
                                 "/api/userextra",
-                                "/api/extrainfo")
+                                "/api/extrainfo",
+                                "/api/family/code")
                         .permitAll()
                         .anyRequest().authenticated());
 

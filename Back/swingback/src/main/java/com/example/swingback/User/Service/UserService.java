@@ -67,7 +67,7 @@ public class UserService {
                         .familyRole(userExtraInfoDTO.getFamilyRole())  // 업데이트할 familyRole 값
                         .gender(userExtraInfoDTO.getGender())  // 업데이트할 gender 값
                         .age(userExtraInfoDTO.getAge())  // 업데이트할 age 값
-                        .familyId(existingUser.getFamilyId())  // 기존 familyId 유지 (필요 시 null)
+                        .family(existingUser.getFamily())  // 기존 familyId 유지 (필요 시 null)
                         .build();
 
                 // 엔티티 저장 (기존 행이 업데이트됨)
