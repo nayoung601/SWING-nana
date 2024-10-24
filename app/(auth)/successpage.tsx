@@ -16,8 +16,8 @@ export default function SuccessPage() {
       .then((data) => {
         setUser(data);
         if (data.familyRole === null) {
-          // familyRole이 null이면 /userextra로 이동   .....
-          router.replace('/(main)');
+          // familyRole이 null이면 /userextra로 이동 
+          router.replace('/userextra');
         } else {
           // familyRole이 null이 아니면 /main으로 이동
           router.replace('/(main)');
