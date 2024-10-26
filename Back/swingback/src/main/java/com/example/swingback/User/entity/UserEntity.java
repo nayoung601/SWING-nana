@@ -1,6 +1,6 @@
 package com.example.swingback.User.entity;
 
-import com.example.swingback.family.entity.FamilyEntity;
+import com.example.swingback.family.newcode.entity.FamilyEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

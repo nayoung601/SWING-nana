@@ -13,4 +13,5 @@ public class UserData {
 
     private String name;
     private String familyRole;
+    private Long userId;
 }

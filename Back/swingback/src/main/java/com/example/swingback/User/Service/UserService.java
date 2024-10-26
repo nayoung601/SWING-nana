@@ -38,7 +38,7 @@ public class UserService {
             log.info("user.getFamilyRole : " + user.getFamilyRole());
 
             //해당 유저의 Name과 FamilyRole 객체를 생성해서 리턴해줌
-            return new UserData(user.getName(), user.getFamilyRole());
+            return new UserData(user.getName(), user.getFamilyRole(),user.getUserId());
 
         }
         //if문을 실행하지 못하였을 경우
