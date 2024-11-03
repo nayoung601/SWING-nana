@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function UserExtraPage() {
@@ -68,12 +68,22 @@ export default function UserExtraPage() {
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>성별:</Text>
-        <TextInput
-          style={styles.input}
-          value={gender}
-          onChangeText={setGender}
-          placeholder="성별을 입력하세요"
-        />
+        <View style={styles.radioContainer}>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setGender('남')}
+          >
+            <View style={[styles.radioCircle, gender === '남' && styles.selectedRadio]} />
+            <Text style={styles.radioText}>남</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.radioButton}
+            onPress={() => setGender('여')}
+          >
+            <View style={[styles.radioCircle, gender === '여' && styles.selectedRadio]} />
+            <Text style={styles.radioText}>여</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.inputContainer}>
@@ -122,5 +132,30 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#555',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedRadio: {
+    backgroundColor: '#555',
+  },
+  radioText: {
+    marginLeft: 8,
+    fontSize: 16,
   },
 });

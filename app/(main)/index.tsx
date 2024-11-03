@@ -1,7 +1,12 @@
 import { View, Text, StyleSheet, Platform } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
+  AsyncStorage.getAllKeys().then((keys) => {
+    AsyncStorage.multiGet(keys).then((result) => {
+      console.log(result);
+    });
+  });
   return (
     <View style={styles.container}>
       <Text>hi there</Text>
