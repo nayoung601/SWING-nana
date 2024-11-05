@@ -1,4 +1,4 @@
-package com.example.swingback.family.entity;
+package com.example.swingback.family.newcode.entity;
 
 import com.example.swingback.User.entity.UserEntity;
 import jakarta.persistence.*;
@@ -24,7 +24,7 @@ public class FamilyEntity {
     @OneToMany(mappedBy = "family") // UserEntity의 familyId와 연결
     private List<UserEntity> users; // FamilyEntity에 속한 UserEntity 리스트
 
-    @Column(name = "Representative")
+    @Column(name = "representative")
     private Long familyRepresentative;
 
 

@@ -37,3 +37,6 @@ out/
 .vscode/
 # Ignore application.yml
 /src/main/resources/application.yml
+
+# FCM json 설정
+/src/main/resources/firebase-notice.json

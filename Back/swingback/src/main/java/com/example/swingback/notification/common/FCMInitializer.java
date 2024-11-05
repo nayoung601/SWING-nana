@@ -14,25 +14,25 @@ import java.io.InputStream;
 
 @Slf4j
 @Component
-public class NoticeInitializer {
+public class FCMInitializer {
 
-    @Value("${firebase.path}")
-    private String path;
+    @Value("${fcm.certification}")
+    private String googleApplicationCredentials;
 
     @PostConstruct
-    public void init(){
-        ClassPathResource resource = new ClassPathResource(path);
+    public void initialize() throws IOException {
+        ClassPathResource resource = new ClassPathResource(googleApplicationCredentials);
 
-        try(InputStream is = resource.getInputStream()) {
+        try (InputStream is = resource.getInputStream()) {
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(is))
                     .build();
 
-            if(FirebaseApp.getApps().isEmpty()){
+            if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
-                log.info("Firebase application init");
+                log.info("FirebaseApp initialization complete");
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
         }

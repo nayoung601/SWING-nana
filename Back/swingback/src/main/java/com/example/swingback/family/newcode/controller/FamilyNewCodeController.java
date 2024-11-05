@@ -1,14 +1,13 @@
-package com.example.swingback.family.controller;
+package com.example.swingback.family.newcode.controller;
 
-import com.example.swingback.error.UnauthorizedException;
-import com.example.swingback.family.DTO.NewCodeDTO;
-import com.example.swingback.family.service.FamilyNewCodeServivce;
+import com.example.swingback.error.CustomException;
+import com.example.swingback.family.newcode.DTO.NewCodeDTO;
+import com.example.swingback.family.newcode.service.FamilyNewCodeServivce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,8 +25,8 @@ public class FamilyNewCodeController {
                 ResponseEntity.status(HttpStatus.OK).body(code.getNewCode());
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 

@@ -14,6 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "FCMToken")
 public class FCMTokenEntity {
 
     @Id

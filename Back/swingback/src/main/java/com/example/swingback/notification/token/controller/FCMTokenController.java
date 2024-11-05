@@ -1,6 +1,6 @@
 package com.example.swingback.notification.token.controller;
 
-import com.example.swingback.error.UnauthorizedException;
+import com.example.swingback.error.CustomException;
 import com.example.swingback.notification.token.dto.FCMTokenDTO;
 import com.example.swingback.notification.token.service.FCMTokenService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class FCMTokenController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }

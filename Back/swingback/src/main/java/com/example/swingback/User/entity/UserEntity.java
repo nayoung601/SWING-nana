@@ -29,7 +29,7 @@ public class UserEntity {
     private String role;
 
     @ManyToOne
-    @JoinColumn(name = "family_id", unique = true) // 가족 아이디 (FK)
+    @JoinColumn(name = "family_id") // 가족 아이디 (FK)
     private FamilyEntity family;
 
     @Column(name = "family_role")  // 가족 구성원

@@ -28,7 +28,11 @@ public class SecurityConfig {
                                 "/api/main",
                                 "/api/userextra",
                                 "/api/extrainfo",
-                                "/api/family/code")
+                                "/api/family/code",
+                                "/api/save-token",
+                                "/api/send-notification",
+                                "/api/code/request",
+                                "/api/code/request/accept")
                         .permitAll()
                         .anyRequest().authenticated());
 

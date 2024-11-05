@@ -1,11 +1,11 @@
-package com.example.swingback.family.service;
+package com.example.swingback.family.newcode.service;
 
 import com.example.swingback.User.entity.UserEntity;
 import com.example.swingback.User.repository.UserRepository;
-import com.example.swingback.error.UnauthorizedException;
-import com.example.swingback.family.DTO.NewCodeDTO;
-import com.example.swingback.family.entity.FamilyEntity;
-import com.example.swingback.family.repository.FamilyRepository;
+import com.example.swingback.error.CustomException;
+import com.example.swingback.family.newcode.DTO.NewCodeDTO;
+import com.example.swingback.family.newcode.entity.FamilyEntity;
+import com.example.swingback.family.newcode.repository.FamilyRepository;
 import com.example.swingback.oauth.dto.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class FamilyNewCodeServivce {
 
         //인증된 사용자가 아니면 에러띄워주기
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UnauthorizedException("인증되지 않은 회원입니다");
+            throw new CustomException("인증되지 않은 회원입니다");
         }
 
         // 현재 인증된 사용자의 providerId를 가져옴

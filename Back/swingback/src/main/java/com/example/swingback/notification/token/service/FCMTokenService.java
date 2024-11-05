@@ -2,7 +2,7 @@ package com.example.swingback.notification.token.service;
 
 import com.example.swingback.User.entity.UserEntity;
 import com.example.swingback.User.repository.UserRepository;
-import com.example.swingback.error.UnauthorizedException;
+import com.example.swingback.error.CustomException;
 import com.example.swingback.notification.token.dto.FCMTokenDTO;
 import com.example.swingback.notification.token.entity.FCMTokenEntity;
 import com.example.swingback.notification.token.repository.FCMTokenRepository;
@@ -31,14 +31,17 @@ public class FCMTokenService {
 
         //인증된 사용자가 아니면 에러띄워주기
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UnauthorizedException("인증되지 않은 회원입니다");
+            throw new CustomException("인증되지 않은 회원입니다");
         }
+        // 프론트에서 넘어온 UserId로 DB에 유저가 있는지 확인
         UserEntity userEntity = userRepository.findByUserId(fcmTokenDTO.getUserId());
 
+        // 해당 유저의 정보와 토큰으로 토큰 테이블에 정보가 저장되어있나 확인 , 토큰,id 둘이 동시에 가지고 있어야함
         Optional<FCMTokenEntity> existingToken =
                 tokenRepository.findByTokenAndUserId(
                         fcmTokenDTO.getToken(),userEntity);
         // 새로운 TokenEntity 생성 및 저장
+        // optional로 정보 가져왔으므로 있으면 .isPresent() 없으면 .isEmpty()로 확인
         if (existingToken.isEmpty()) {
             log.info("토큰이 존재하지 않습니다, 토큰을 저장합니다.");
             FCMTokenEntity tokenEntity = FCMTokenEntity.builder()

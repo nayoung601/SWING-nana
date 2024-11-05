@@ -1,4 +1,4 @@
-package com.example.swingback.family.DTO;
+package com.example.swingback.family.newcode.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
