@@ -1,46 +1,27 @@
-// import React, { useState } from 'react';
-// import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-// import { WebView } from 'react-native-webview';
+// import React from 'react';
+// import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+// import * as WebBrowser from 'expo-web-browser';
 
 // export default function Login() {
-//   const [showWebView, setShowWebView] = useState(false);
-//   const [loginUrl, setLoginUrl] = useState('');
-
-//   const handleButtonClickKaKao = () => {
-//     setLoginUrl('http://localhost:8080/oauth2/authorization/kakao');
-//     setShowWebView(true); // WebView 표시
+//   const handleButtonClickKaKao = async () => {
+//     await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/kakao');
 //   };
 
-//   const handleButtonClickNaver = () => {
-//     setLoginUrl('http://localhost:8080/oauth2/authorization/naver');
-//     setShowWebView(true); // WebView 표시
+//   const handleButtonClickNaver = async () => {
+//     await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/naver');
 //   };
-
-//   if (showWebView) {
-//     return (
-//       <WebView
-//         source={{ uri: loginUrl }}
-//         onNavigationStateChange={(event) => {
-//           // 로그인 성공 후 success URL로 리다이렉트 감지
-//           if (event.url.includes('/successpage')) {
-//             setShowWebView(false); // WebView 닫기
-//           }
-//         }}
-//       />
-//     );
-//   }
 
 //   return (
 //     <View style={styles.container}>
 //       <Text style={styles.title}>WIN;C</Text>
 
-//       <TouchableOpacity onPress={handleButtonClickKaKao} style={styles.button}>
-//         <Image source={require('../../assets/images/kakao_login.png')} style={styles.buttonImage} />
-//       </TouchableOpacity>
+//       <Pressable onPress={handleButtonClickKaKao} style={styles.button}>
+//         <Image source={require('../assets/images/kakao_login.png')} style={styles.buttonImage} />
+//       </Pressable>
 
-//       <TouchableOpacity onPress={handleButtonClickNaver} style={styles.button}>
-//         <Image source={require('../../assets/images/naver_login.png')} style={styles.buttonImage} />
-//       </TouchableOpacity>
+//       <Pressable onPress={handleButtonClickNaver} style={styles.button}>
+//         <Image source={require('../assets/images/naver_login.png')} style={styles.buttonImage} />
+//       </Pressable>
 //     </View>
 //   );
 // }
@@ -65,19 +46,46 @@
 //   },
 // });
 
-
-import React from 'react';
-import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
+import React, { useState } from 'react';
+import { View, Text, Image, Pressable, StyleSheet, Platform } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 export default function Login() {
-  const handleButtonClickKaKao = async () => {
-    await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/kakao');
+  const [url, setUrl] = useState(null); // 웹뷰에 표시할 URL을 저장하는 상태
+
+  const handleButtonClickKaKao = () => {
+    const kakaoUrl = 'http://localhost:8080/oauth2/authorization/kakao';
+    if (Platform.OS === 'web') {
+      window.location.href = kakaoUrl; // 웹 환경에서는 현재 창에서 링크 열기
+    } else {
+      setUrl(kakaoUrl); // 모바일 환경에서는 WebView에 URL 설정
+    }
   };
 
-  const handleButtonClickNaver = async () => {
-    await WebBrowser.openBrowserAsync('http://localhost:8080/oauth2/authorization/naver');
+  const handleButtonClickNaver = () => {
+    const naverUrl = 'http://localhost:8080/oauth2/authorization/naver';
+    if (Platform.OS === 'web') {
+      window.location.href = naverUrl; // 웹 환경에서는 현재 창에서 링크 열기
+    } else {
+      setUrl(naverUrl); // 모바일 환경에서는 WebView에 URL 설정
+    }
   };
+
+  // WebView 모드일 때 로그인 창 대신 웹뷰를 표시합니다.
+  if (url && Platform.OS !== 'web') {
+    return (
+      <WebView
+        source={{ uri: url }}
+        style={{ flex: 1 }}
+        onNavigationStateChange={(event) => {
+          // 로그인 완료 시 WebView 종료 조건을 추가
+          if (event.url.includes('successpage')) {
+            setUrl(null); // WebView 닫기
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonImage: {
-    width: 200, // 이미지의 실제 크기로 조정 (가로 크기)
-    height: 50,  // 이미지의 실제 크기로 조정 (세로 크기)
+    width: 200,
+    height: 50,
   },
 });

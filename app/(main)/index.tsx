@@ -9,7 +9,7 @@ export default function HomeScreen() {
   });
   return (
     <View style={styles.container}>
-      <Text>hi there</Text>
+      <Text></Text>
     </View>
   );
 
