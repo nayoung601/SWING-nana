@@ -24,12 +24,19 @@ public class TotalNotificationEntity {
     @Column(name = "type") // 알림 타입 작성 , 가족요청,가족승인알림,가족거부알림 등등
     private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id") //보낸사람 아이디
-    private UserEntity requestId;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id") //요청 보낸사람 아이디
+//    private UserEntity requestId;
+//
+//    @Column(name = "response_id") // 알림을 받는사람 아이디
+//    private Long responseId;
 
-    @Column(name = "response_id") // 알림을 받는사람 아이디
-    private Long responseId;
+    @ManyToOne
+    @JoinColumn(name = "responseId") //알림 받는 사람 아이디
+    private UserEntity responseId;
+
+    @Column(name = "request_id") // 요청 보낸사람 아이디
+    private Long requestId;
 
     @Column(name = "send_time") // 알림을 보낸 시간
     private Date sendTime;

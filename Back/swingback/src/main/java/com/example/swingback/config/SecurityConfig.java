@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 "/api/save-token",
                                 "/api/send-notification",
                                 "/api/code/request",
-                                "/api/code/request/accept")
+                                "/api/code/request/result")
                         .permitAll()
                         .anyRequest().authenticated());
 

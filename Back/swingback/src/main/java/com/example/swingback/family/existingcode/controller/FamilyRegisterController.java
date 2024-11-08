@@ -28,19 +28,16 @@ public class FamilyRegisterController {
         familyRegisterRequestService.findFamilyIdAndRequest(familyRegisterRequestDTO);
     }
 
-    @PostMapping("/api/code/request/accept")
+    @PostMapping("/api/code/request/result")
     public void familyRegisterRequestAccept(@RequestBody FamilyRegisterResponseDTO familyRegisterResponseDTO) {
         log.info("Received response: {}",familyRegisterResponseDTO.toString());
         if (familyRegisterResponseDTO.getAcceptOrReject()) {
             familyRegisterRequestService.requestAccept(familyRegisterResponseDTO);
+        } else {
+            familyRegisterRequestService.requestReject(familyRegisterResponseDTO);
+
         }
-    }
-    @PostMapping("/api/code/request/reject")
-    public void familyRegisterRequestReject(@RequestBody FamilyRegisterResponseDTO familyRegisterResponseDTO) {
-        log.info("Received response: {}",familyRegisterResponseDTO.toString());
-        if (familyRegisterResponseDTO.getAcceptOrReject()) {
-            familyRegisterRequestService.requestAccept(familyRegisterResponseDTO);
-        }
+
     }
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생

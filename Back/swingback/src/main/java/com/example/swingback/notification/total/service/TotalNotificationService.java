@@ -24,8 +24,8 @@ public class TotalNotificationService {
     private final MessageTemplateService messageTemplateService;
     private final FCMService fcmService;
     public void saveNotification(String type,
-                                 UserEntity requestId,
-                                 Long responseId,
+                                 Long requestId,
+                                 UserEntity responseId,
                                  Boolean read,
                                  Boolean hidden,
                                  Date scheduledTime,
