@@ -1,4 +1,4 @@
-package com.example.swingback.notification.dto;
+package com.example.swingback.notification.fcmtest.dto;
 
 import lombok.Getter;
 

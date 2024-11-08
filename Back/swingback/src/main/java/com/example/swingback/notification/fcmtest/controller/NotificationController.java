@@ -1,7 +1,7 @@
-package com.example.swingback.notification.controller;
+package com.example.swingback.notification.fcmtest.controller;
 
-import com.example.swingback.notification.dto.NotificationRequestDTO;
-import com.example.swingback.notification.service.FCMService;
+import com.example.swingback.notification.fcmtest.dto.NotificationRequestDTO;
+import com.example.swingback.notification.fcmtest.service.FCMService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
