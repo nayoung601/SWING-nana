@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageTemplateDTO {
+public class MessageTemplateDTO { // Service에서 return으로 넘겨줄 메시지 DTO
     private String title;
     private String body;
 }
