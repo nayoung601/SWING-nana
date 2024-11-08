@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MessageEntity {
+public class MessageTemplateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
