@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 "/api/send-notification",
                                 "/api/code/request",
                                 "/api/code/request/result",
-                                "/api/notification/**")
+                                "/api/notification/**",
+                                "/api/medicine")
                         .permitAll()
                         .anyRequest().authenticated());
 

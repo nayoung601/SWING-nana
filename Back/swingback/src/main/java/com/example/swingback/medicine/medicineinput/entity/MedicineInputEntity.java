@@ -1,25 +1,32 @@
 package com.example.swingback.medicine.medicineinput.entity;
 
+import com.example.swingback.medicine.medicinebag.entity.MedicineBagEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "medicine_input")
-public class MedicineInput {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MedicineInputEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "registeredMedicineId")
+    @Column(name = "registered_medicine_id")
     private Long registeredMedicineId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "약봉투_id", nullable = false)
-    private MedicationPouch medicationPouch;
+    @ManyToOne // 약봉투 id
+    @JoinColumn(name = "medicine_bag_id", nullable = false)
+    private MedicineBagEntity medicineBag;
 
-    @Column(name = "약이름", nullable = false)
-    private String medicationName;
+    @Column(name = "medicine_name", nullable = false) // 약이름
+    private String medicineName;
 
-    @Column(name = "1회_섭취횟수", nullable = false)
+    @Column(name = "dosage_per_intake", nullable = false) // 약 1회 섭취량
     private int dosagePerIntake;
 
-    @Column(name = "복용확인", nullable = false)
+    @Column(name = "intake_confirmed", nullable = false) // 약 복용확인
     private boolean intakeConfirmed;
 }
