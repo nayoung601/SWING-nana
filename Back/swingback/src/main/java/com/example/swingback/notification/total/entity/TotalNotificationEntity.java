@@ -45,10 +45,10 @@ public class TotalNotificationEntity {
     private Date scheduledTime;
 
     @Column(name = "is_read") // 읽음 여부 표시
-    private Boolean isRead;
+    private boolean isRead;
 
     @Column(name = "hidden") // 가족에게 숨길건지 표시
-    private Boolean hidden;
+    private boolean hidden;
 
     @Column(name = "message") // 알림창에 띄워줄 알림 메시지
     private String message;
