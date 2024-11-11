@@ -5,11 +5,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-// import ShowName from '@/components/ShowName';
+import { useUserData } from '@/context/UserDataContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const navigation = useNavigation();  
+  const { user } = useUserData(); 
 
   return (
     <Tabs
@@ -26,8 +27,7 @@ export default function TabLayout() {
         headerTitleAlign: 'left', 
         headerTitle: () => (
           <View style={styles.headerContainer}>
-            <Text>엄마마</Text>
-            {/* <Text><ShowName name="엄마마" /></Text>  */}
+            <Text style={styles.familyRoleText}>{user?.familyRole || '사용자'}</Text>
           </View>
         ),
         // headerRight: () => (
@@ -86,6 +86,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  familyRoleText: {
+    color: '#ffffff', 
+    fontSize: 18,
+    fontWeight: 'bold',     
   },
   headerRight: {
     flexDirection: 'row',
