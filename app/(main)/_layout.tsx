@@ -1,21 +1,21 @@
-import { Tabs, useNavigation } from 'expo-router';  // useNavigation 추가
+import { Tabs } from 'expo-router';
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useUserData } from '@/context/UserDataContext';
+import { Link } from 'expo-router';  // Link 임포트
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const navigation = useNavigation();  
   const { user } = useUserData(); 
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#595958',
         tabBarStyle: {
           backgroundColor: 'white',
           borderTopWidth: 0,
@@ -30,17 +30,17 @@ export default function TabLayout() {
             <Text style={styles.familyRoleText}>{user?.familyRole || '사용자'}</Text>
           </View>
         ),
-        // headerRight: () => (
-        //   <View style={styles.headerRight}>
-        //     <TouchableOpacity onPress={() => navigation.navigate('notify')}>
-        //       <TabBarIcon name="notifications" color={Colors[colorScheme ?? 'light'].tint} />
-        //     </TouchableOpacity>
-            
-        //     <TouchableOpacity onPress={() => navigation.navigate('setting')}>
-        //       <TabBarIcon name="settings" color={Colors[colorScheme ?? 'light'].tint} />
-        //     </TouchableOpacity>
-        //   </View>
-        // ),
+        headerRight: () => (
+          <View style={styles.headerRight}>
+            <Link href="/notification">
+              <TabBarIcon name="notifications" color="#ffffff" />
+            </Link>
+
+            <Link href="/chat">
+              <TabBarIcon name="chatbubbles" color="#ffffff" />
+            </Link>
+          </View>
+        ),
       }}>
       <Tabs.Screen
         name="index"
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'column',
     alignItems: 'center',
+    paddingLeft: 5,
   },
   familyRoleText: {
     color: '#ffffff', 

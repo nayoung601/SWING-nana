@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import Calendar from '@/components/Calendar';
 import MedicationList from '@/components/MedicationList';
+import RewardPoints from '@/components/RewardPoint';
 
 export default function HomeScreen() {
   // AsyncStorage.getAllKeys().then((keys) => {
@@ -13,6 +14,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Calendar style={styles.calendar} />
       <MedicationList userId = {1} />
+      <RewardPoints />
     </View>
   );
 
