@@ -27,6 +27,25 @@ public class MedicineInputEntity {
     @Column(name = "dosage_per_intake", nullable = false) // 약 1회 섭취량
     private int dosagePerIntake;
 
+    @Column(name = "frequency_intake", nullable = false) // 하루 섭취 횟수
+    private int frequencyIntake;
+
+    @Column(name = "duration_intake", nullable = false) // 섭취 기간
+    private int durationIntake;
+
+    @Column(name = "morning_timebox", nullable = false) // 아침 복용 여부
+    private boolean morningTimebox;
+
+    @Column(name = "lunch_timebox", nullable = false) // 점심 복용 여부
+    private boolean lunchTimebox;
+
+    @Column(name = "dinner_timebox", nullable = false) // 저녁 복용 여부
+    private boolean dinnerTimebox;
+
+    @Column(name = "beforeSleep_timebox", nullable = false)// 자기전 복용 여부
+    private boolean beforeSleepTimebox;
+
     @Column(name = "intake_confirmed", nullable = false) // 약 복용확인
     private boolean intakeConfirmed;
+
 }

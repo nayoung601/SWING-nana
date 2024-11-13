@@ -30,7 +30,7 @@ public class MedicineBagController {
         for (MedicineInputDTO medicine : medicineBagDTO.getMedicineList()) {
             log.info("약 이름: {}", medicine.getMedicineName());
             log.info("복용량 {}", medicine.getDosagePerIntake());
-            log.info("복용 확인: {}", medicine.isIntakeConfirmed());
+            log.info("복용 확인: {}", medicine.getIntakeConfirmed());
         }
         for (LocalDateTime medicine : medicineBagDTO.getNotificationTimes()) {
             log.info("예약 시간 : {}",medicine );

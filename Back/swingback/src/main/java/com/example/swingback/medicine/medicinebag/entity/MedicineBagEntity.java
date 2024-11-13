@@ -37,6 +37,9 @@ public class MedicineBagEntity {
     @Column(name = "medicine_bag_title", nullable = false) // 약봉투 타이틀
     private String medicineBagTitle;
 
+    @Column(name = "total_intake_confirmed", nullable = false)
+    private boolean totalIntakeConfirmed;
+
     /*
     MedicineInput 목록 설정 (양방향 관계
     mappedBy= "medicineBag"는 MedicineInputEntity의 필드명이랑 일치해야함

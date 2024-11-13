@@ -41,6 +41,7 @@ public class MedicineBagSservice {
                 .registrationDate(medicineBagDTO.getRegistrationDate())
                 .endDate(medicineBagDTO.getEndDate())
                 .hidden(medicineBagDTO.getHidden())
+                .totalIntakeConfirmed(medicineBagDTO.getTotalIntakeConfirmed())
                 .medicinesInput(new ArrayList<>())
                 .notificationTimes(new ArrayList<>())
                 .build();
@@ -51,7 +52,13 @@ public class MedicineBagSservice {
                     .medicineBag(medicineBag) // 양방향 관계 설정
                     .medicineName(medicineDTO.getMedicineName())
                     .dosagePerIntake(medicineDTO.getDosagePerIntake())
-                    .intakeConfirmed(medicineDTO.isIntakeConfirmed())
+                    .frequencyIntake(medicineDTO.getFrequencyIntake())
+                    .durationIntake(medicineDTO.getDurationIntake())
+                    .morningTimebox(medicineDTO.getMorningTimebox())
+                    .lunchTimebox(medicineDTO.getLunchTimebox())
+                    .dinnerTimebox(medicineDTO.getDinnerTimebox())
+                    .beforeSleepTimebox(medicineDTO.getBeforeSleepTimebox())
+                    .intakeConfirmed(medicineDTO.getIntakeConfirmed())
                     .build();
 
             // MedicineInputEntity 리스트에 추가
