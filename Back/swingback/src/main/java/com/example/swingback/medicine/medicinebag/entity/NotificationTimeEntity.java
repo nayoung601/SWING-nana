@@ -25,7 +25,17 @@ public class NotificationTimeEntity {
     @JoinColumn(name = "medicine_bag_id", nullable = false)
     private MedicineBagEntity medicineBag;
 
-    @Column(name = "notification_time") // 알림 시간
-    private LocalDateTime notificationTime;
+    @Column
+    private LocalDateTime morningTime;
+
+    @Column
+    private LocalDateTime lunchTime;
+
+    @Column
+    private LocalDateTime dinnerTime;
+
+    @Column
+    private LocalDateTime beforeSleepTime;
+
 
 }

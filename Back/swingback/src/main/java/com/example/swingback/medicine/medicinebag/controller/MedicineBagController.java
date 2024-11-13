@@ -32,10 +32,7 @@ public class MedicineBagController {
             log.info("복용량 {}", medicine.getDosagePerIntake());
             log.info("복용 확인: {}", medicine.getIntakeConfirmed());
         }
-        for (LocalDateTime medicine : medicineBagDTO.getNotificationTimes()) {
-            log.info("예약 시간 : {}",medicine );
 
-        }
         medicineBagSservice.saveMedicineInputAndBag(medicineBagDTO);
         return ResponseEntity.status(HttpStatus.OK).body("등록 성공");
     }

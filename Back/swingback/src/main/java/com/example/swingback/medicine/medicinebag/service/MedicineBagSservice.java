@@ -5,6 +5,7 @@ import com.example.swingback.User.repository.UserRepository;
 import com.example.swingback.error.CustomException;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
 import com.example.swingback.medicine.medicinebag.dto.MedicineInputDTO;
+import com.example.swingback.medicine.medicinebag.dto.NotificationTimeDTO;
 import com.example.swingback.medicine.medicinebag.entity.MedicineBagEntity;
 import com.example.swingback.medicine.medicinebag.entity.NotificationTimeEntity;
 import com.example.swingback.medicine.medicinebag.repository.MedicineBagRepository;
@@ -65,10 +66,13 @@ public class MedicineBagSservice {
             medicineBag.getMedicinesInput().add(medicineInput);
         }
         // NotificationTimeEntity 리스트 생성
-        for (LocalDateTime notificationTime : medicineBagDTO.getNotificationTimes()) {
+        for (NotificationTimeDTO notificationTime : medicineBagDTO.getNotificationTimes()) {
             NotificationTimeEntity notificationTimeEntity = NotificationTimeEntity.builder()
                     .medicineBag(medicineBag) // 양방향 관계 설정
-                    .notificationTime(notificationTime)
+                    .morningTime(notificationTime.getMorningTime())
+                    .lunchTime(notificationTime.getLunchTime())
+                    .dinnerTime(notificationTime.getDinnerTime())
+                    .beforeSleepTime(notificationTime.getBeforeSleepTime())
                     .build();
 
             // NotificationTimeEntity 리스트에 추가

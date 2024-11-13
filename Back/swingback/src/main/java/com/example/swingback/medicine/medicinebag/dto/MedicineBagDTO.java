@@ -14,7 +14,7 @@ public class MedicineBagDTO {
 //    private LocalDateTime notificationTime; // 알림 시간
     private String medicineBagTitle; // 약 제목
     private List<MedicineInputDTO> medicineList; // 등록 약 목록
-    private List<LocalDateTime> notificationTimes; // 알림 시간 리스트
+    private List<NotificationTimeDTO> notificationTimes; // 알림 시간 리스트
     private Boolean hidden;
     private Boolean totalIntakeConfirmed;
 }
