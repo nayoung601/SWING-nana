@@ -1,4 +1,4 @@
-package com.example.swingback.medicine.medicinebag.dto;
+package com.example.swingback.medicine.medicineinput.dto;
 
 import lombok.Getter;
 

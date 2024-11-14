@@ -34,7 +34,8 @@ public class SecurityConfig {
                                 "/api/code/request",
                                 "/api/code/request/result",
                                 "/api/notification/**",
-                                "/api/medicine")
+                                "/api/medicine",
+                                "/api/**")
                         .permitAll()
                         .anyRequest().authenticated());
 

@@ -45,7 +45,7 @@ public class MedicineInputEntity {
     @Column(name = "beforeSleep_timebox", nullable = false)// 자기전 복용 여부
     private boolean beforeSleepTimebox;
 
-    @Column(name = "intake_confirmed", nullable = false) // 약 복용확인
-    private boolean intakeConfirmed;
+//    @Column(name = "intake_confirmed", nullable = false) // 약 복용확인
+//    private boolean intakeConfirmed;
 
 }

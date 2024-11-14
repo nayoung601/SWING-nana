@@ -1,12 +1,10 @@
 package com.example.swingback.medicine.medicinebag.entity;
 
 import com.example.swingback.User.entity.UserEntity;
+import com.example.swingback.medicine.medicationmanagement.entity.MedicationManagementEntity;
 import com.example.swingback.medicine.medicineinput.entity.MedicineInputEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class MedicineBagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +36,8 @@ public class MedicineBagEntity {
     @Column(name = "medicine_bag_title", nullable = false) // 약봉투 타이틀
     private String medicineBagTitle;
 
-    @Column(name = "total_intake_confirmed", nullable = false)
-    private boolean totalIntakeConfirmed;
+//    @Column(name = "total_intake_confirmed", nullable = false)
+//    private boolean totalIntakeConfirmed;
 
     /*
     MedicineInput 목록 설정 (양방향 관계
@@ -49,9 +48,21 @@ public class MedicineBagEntity {
     @OneToMany(mappedBy = "medicineBag", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicineInputEntity> medicinesInput;
 
-    // 알림 시간 목록 설정
     @OneToMany(mappedBy = "medicineBag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationTimeEntity> notificationTimes;
+    private List<MedicationManagementEntity> medicationManagementEntities;
+
+    // 알림 시간 목록 설정
+    @Column
+    private LocalDateTime morningTime;
+
+    @Column
+    private LocalDateTime lunchTime;
+
+    @Column
+    private LocalDateTime dinnerTime;
+
+    @Column
+    private LocalDateTime beforeSleepTime;
 
     //가족에게 보여줄지 안보여줄지 설정
     @Column(name = "hidden")

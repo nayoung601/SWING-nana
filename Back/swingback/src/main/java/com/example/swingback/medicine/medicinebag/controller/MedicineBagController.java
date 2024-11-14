@@ -2,18 +2,15 @@ package com.example.swingback.medicine.medicinebag.controller;
 
 import com.example.swingback.error.CustomException;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
-import com.example.swingback.medicine.medicinebag.dto.MedicineInputDTO;
+import com.example.swingback.medicine.medicineinput.dto.MedicineInputDTO;
 import com.example.swingback.medicine.medicinebag.service.MedicineBagSservice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @RestController
 @Slf4j
@@ -35,6 +32,11 @@ public class MedicineBagController {
 
         medicineBagSservice.saveMedicineInputAndBag(medicineBagDTO);
         return ResponseEntity.status(HttpStatus.OK).body("등록 성공");
+    }
+
+    @GetMapping("/api/medicine/{userId}")
+    public void sendMedicineBag(@PathVariable Long userId,@RequestParam LocalDate date) {
+        medicineBagSservice.findMedicineBagInfo(userId, date);
     }
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
