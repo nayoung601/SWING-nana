@@ -3,6 +3,7 @@ package com.example.swingback.medicine.medicinebag.entity;
 import com.example.swingback.User.entity.UserEntity;
 import com.example.swingback.medicine.medicationmanagement.entity.MedicationManagementEntity;
 import com.example.swingback.medicine.medicineinput.entity.MedicineInputEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,9 +47,11 @@ public class MedicineBagEntity {
     약봉투(부모)가 사라졌을 떄 입력한 약(자식)이 혼자 남는 상황 방지 하기 위해서 orphanRemoval = true 사용
      */
     @OneToMany(mappedBy = "medicineBag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // 순환 참조 방지
     private List<MedicineInputEntity> medicinesInput;
 
     @OneToMany(mappedBy = "medicineBag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // 순환 참조 방지
     private List<MedicationManagementEntity> medicationManagementEntities;
 
     // 알림 시간 목록 설정

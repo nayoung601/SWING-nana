@@ -1,6 +1,7 @@
 package com.example.swingback.medicine.medicinebag.controller;
 
 import com.example.swingback.error.CustomException;
+import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
 import com.example.swingback.medicine.medicineinput.dto.MedicineInputDTO;
 import com.example.swingback.medicine.medicinebag.service.MedicineBagSservice;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -35,9 +37,14 @@ public class MedicineBagController {
     }
 
     @GetMapping("/api/medicine/{userId}")
-    public void sendMedicineBag(@PathVariable Long userId,@RequestParam LocalDate date) {
-        medicineBagSservice.findMedicineBagInfo(userId, date);
+    public ResponseEntity<List<MedicationManagementDTO>> sendMedicineBag(@PathVariable Long userId,@RequestParam LocalDate date) {
+        List<MedicationManagementDTO> medicineBagInfo = medicineBagSservice.findMedicineBagInfo(userId, date);
+        return (!medicineBagInfo.isEmpty()) ?
+                ResponseEntity.status(HttpStatus.OK).body(medicineBagInfo) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    @
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {

@@ -3,6 +3,8 @@ package com.example.swingback.medicine.medicinebag.service;
 import com.example.swingback.User.entity.UserEntity;
 import com.example.swingback.User.repository.UserRepository;
 import com.example.swingback.error.CustomException;
+import com.example.swingback.medicine.medicationmanagement.dto.IntakeMedicineListDTO;
+import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
 import com.example.swingback.medicine.medicationmanagement.entity.IntakeMedicineListEntity;
 import com.example.swingback.medicine.medicationmanagement.entity.MedicationManagementEntity;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +55,10 @@ public class MedicineBagSservice {
                 .dinnerTime(medicineBagDTO.getDinnerTime())
                 .beforeSleepTime(medicineBagDTO.getBeforeSleepTime())
                 .build();
-
+        // 요청한 사용자 ID가 유효한지 확인
+        if (medicineBag == null) {
+            throw new CustomException("약정보 등록중 오류가 발생했습니다.");
+        }
         // MedicineInputEntity 리스트 생성
         for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
             MedicineInputEntity medicineInput = MedicineInputEntity.builder()
@@ -180,7 +187,7 @@ public class MedicineBagSservice {
 
     }
 
-    public void findMedicineBagInfo(Long userId, LocalDate date) {
+    public List<MedicationManagementDTO> findMedicineBagInfo(Long userId, LocalDate date) {
         //요청을 보내는 회원의 회원정보 가져오기
         UserEntity requestUserEntity =
                 userRepository.findByUserId(userId);
@@ -192,12 +199,53 @@ public class MedicineBagSservice {
         // 등록된 약봉투 데이터가 없는 경우 null 반환
         if (byUserIdAndDateBetween.isEmpty()) {
             log.info("No medicine bags found for userId: {} and date: {}", userId, date);
-//            return null;
+            throw new CustomException("해당 날짜의 약 정보가 존재하지 않습니다");
         }
+        List<MedicationManagementDTO> medicationManagementDTOS = new ArrayList<>();
         for (MedicineBagEntity medicineBag : byUserIdAndDateBetween) {
-            // 로그에 객체 정보 출력
-            log.info("MedicineBagEntity: {}", medicineBag);
+            for (MedicationManagementEntity medicationManagementEntity : medicineBag.getMedicationManagementEntities()) {
+                if (medicationManagementEntity.getNotificationDate().isEqual(date)) {
+                    // 변환 작업
+                    List<IntakeMedicineListDTO> intakeMedicineListDTOs = medicationManagementEntity.getMedicineList().stream()
+                            .map(intakeMedicineListEntity -> IntakeMedicineListDTO.builder()
+                                    .intakeMedicineListId(intakeMedicineListEntity.getIntakeMedicineListId())
+                                    .medicineName(intakeMedicineListEntity.getMedicineName())
+                                    .dosagePerIntake(intakeMedicineListEntity.getDosagePerIntake())
+                                    .intakeConfirmed(intakeMedicineListEntity.isIntakeConfirmed())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    // DTO 빌드
+                    MedicationManagementDTO addList = MedicationManagementDTO.builder()
+                            .medicineBagId(medicineBag.getMedicineBagId())
+                            .MedicationManagementId(medicationManagementEntity.getMedicationManagementId())
+                            .medicineBagName(medicineBag.getMedicineBagTitle())
+                            .notificationDate(medicationManagementEntity.getNotificationDate())
+                            .notificationTime(medicationManagementEntity.getNotificationTime())
+                            .totalIntakeConfirmed(medicationManagementEntity.isTotalIntakeConfirmed())
+                            .hidden(medicineBag.isHidden())
+                            .medicineList(intakeMedicineListDTOs)
+                            .build();
+
+                    medicationManagementDTOS.add(addList);
+                }
+            }
+        }
+        // 데이터 보내기전에 시간순으로 정렬하기
+        medicationManagementDTOS.sort(Comparator.comparing(MedicationManagementDTO::getNotificationTime));
+
+        for (MedicationManagementDTO medicationManagementDTO : medicationManagementDTOS) {
+            log.info("MedicationManagementId: {}", medicationManagementDTO.getMedicationManagementId());
+            log.info("medicineBagId: {}", medicationManagementDTO.getMedicineBagId());
+            log.info("medicineBagName: {}", medicationManagementDTO.getMedicineBagName());
+            log.info("medicineList: {}", medicationManagementDTO.getMedicineList());
+            log.info("notificationTime: {}", medicationManagementDTO.getNotificationTime());
+            log.info("notificationDate: {}", medicationManagementDTO.getNotificationDate());
+            log.info("totalIntakeConfirmed: {}", medicationManagementDTO.isTotalIntakeConfirmed());
+            log.info("hidden: {}", medicationManagementDTO.isHidden());
+
         }
 
+    return medicationManagementDTOS;
     }
 }

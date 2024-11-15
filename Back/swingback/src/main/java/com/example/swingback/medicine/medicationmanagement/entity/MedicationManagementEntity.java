@@ -1,6 +1,7 @@
 package com.example.swingback.medicine.medicationmanagement.entity;
 
 import com.example.swingback.medicine.medicinebag.entity.MedicineBagEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,7 @@ public class MedicationManagementEntity {
     private boolean totalIntakeConfirmed;
 
     @OneToMany(mappedBy = "medicationManagement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // 순환 참조 방지
     private List<IntakeMedicineListEntity> medicineList;
 
 }
