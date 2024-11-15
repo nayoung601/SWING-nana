@@ -7,6 +7,8 @@ import com.example.swingback.medicine.medicationmanagement.dto.IntakeMedicineLis
 import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
 import com.example.swingback.medicine.medicationmanagement.entity.IntakeMedicineListEntity;
 import com.example.swingback.medicine.medicationmanagement.entity.MedicationManagementEntity;
+import com.example.swingback.medicine.medicationmanagement.repository.IntakeMedicineListRepository;
+import com.example.swingback.medicine.medicationmanagement.repository.MedicationManegementRepository;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
 import com.example.swingback.medicine.medicineinput.dto.MedicineInputDTO;
 import com.example.swingback.medicine.medicinebag.entity.MedicineBagEntity;
@@ -21,6 +23,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +33,8 @@ public class MedicineBagSservice {
 
     private final MedicineBagRepository medicineBagRepository;
     private final UserRepository userRepository;
+    private final IntakeMedicineListRepository intakeMedicineListRepository;
+    private final MedicationManegementRepository medicationManegementRepository;
 
     public void saveMedicineInputAndBag(MedicineBagDTO medicineBagDTO) {
         //요청을 보내는 회원의 회원정보 가져오기
@@ -247,5 +252,27 @@ public class MedicineBagSservice {
         }
 
     return medicationManagementDTOS;
+    }
+
+    public void updateIntakeMedicineListIntakeConfirmed(Long intakeMedicineListId, boolean intakeConfirmed) {
+        IntakeMedicineListEntity byId = intakeMedicineListRepository.findById(intakeMedicineListId)
+                .orElseThrow(() ->new CustomException("유효하지 않은 복약정보입니다."));
+        byId.setIntakeConfirmed(intakeConfirmed);
+        intakeMedicineListRepository.save(byId);
+    }
+
+    public void updateAllIntakeConfirmed(Long medicationManagementId) {
+        MedicationManagementEntity medicationManagement = medicationManegementRepository.findById(medicationManagementId)
+                .orElseThrow(() -> new CustomException("유효하지 않은 복약관리 정보입니다."));
+
+        // 모든 약의 intakeConfirmed를 true로 설정
+        for (IntakeMedicineListEntity medicine : medicationManagement.getMedicineList()) {
+            medicine.setIntakeConfirmed(true);
+        }
+
+        // totalIntakeConfirmed를 true로 설정
+        medicationManagement.setIntakeConfirmed(true);
+
+        medicationManegementRepository.save(medicationManagement);
     }
 }

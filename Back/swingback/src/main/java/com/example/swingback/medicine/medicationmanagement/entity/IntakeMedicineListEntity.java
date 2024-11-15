@@ -31,4 +31,9 @@ public class IntakeMedicineListEntity {
 
     @Column(name = "intake_confirmed", nullable = false) // 약 복용확인
     private boolean intakeConfirmed;
+
+    // 약 복용확인 위한 Setter 메서드 추가
+    public void setIntakeConfirmed(boolean intakeConfirmed) {
+        this.intakeConfirmed = intakeConfirmed;
+    }
 }

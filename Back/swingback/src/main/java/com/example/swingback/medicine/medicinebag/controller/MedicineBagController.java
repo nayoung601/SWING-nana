@@ -44,7 +44,15 @@ public class MedicineBagController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @
+    @PatchMapping("/api/medicine/intake")
+    public void updateIntakeConfirmed(@RequestParam Long intakeMedicineListId,
+                                      @RequestParam boolean intakeConfirmed) {
+        medicineBagSservice.updateIntakeMedicineListIntakeConfirmed(intakeMedicineListId,intakeConfirmed);
+    }
+    @PatchMapping("/api/medicine/intake/all")
+    public void updateAllIntakeConfirmed(@RequestParam Long medicationManagementId) {
+        medicineBagSservice.updateAllIntakeConfirmed(medicationManagementId);
+    }
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {

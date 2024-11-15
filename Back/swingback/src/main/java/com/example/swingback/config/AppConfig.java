@@ -10,7 +10,7 @@ public class AppConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") // CORS 허용할 경로
                 .allowedOrigins("http://localhost:3000") // 프론트엔드 주소
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드
+                .allowedMethods("GET", "POST", "PUT", "DELETE","PATCH") // 허용할 HTTP 메서드
                 .allowCredentials(true);
     }
 
