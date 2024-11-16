@@ -83,103 +83,128 @@ public class MedicineBagSservice {
         }
 
         //알림 시간 추출
-        LocalTime morningTime = medicineBagDTO.getMorningTime().toLocalTime();
-        LocalTime lunchTime = medicineBagDTO.getLunchTime().toLocalTime();
-        LocalTime dinnerTime = medicineBagDTO.getDinnerTime().toLocalTime();
-        LocalTime beforeSleepTime = medicineBagDTO.getBeforeSleepTime().toLocalTime();
+        LocalTime morningTime=null;
+        LocalTime lunchTime=null;
+        LocalTime dinnerTime=null;
+        LocalTime beforeSleepTime=null;
+        if (medicineBagDTO.getMorningTime()!= null) {
+            morningTime = medicineBagDTO.getMorningTime().toLocalTime();
+        }
+        if (medicineBagDTO.getLunchTime()!= null) {
+            lunchTime = medicineBagDTO.getLunchTime().toLocalTime();
+        }
+        if (medicineBagDTO.getDinnerTime()!= null) {
+            dinnerTime = medicineBagDTO.getDinnerTime().toLocalTime();
+        }
+        if (medicineBagDTO.getBeforeSleepTime()!= null) {
+            beforeSleepTime = medicineBagDTO.getBeforeSleepTime().toLocalTime();
+        }
 
         // 복약관리 테이블에 들어갈 날짜 만들기
         LocalDate currentDate = medicineBagDTO.getRegistrationDate();
         while (!currentDate.isAfter(medicineBagDTO.getEndDate())) { // currentDate 가 endDate와 같을때까지 true 반환
             //아침 약에대한 테이블 만들기
-            MedicationManagementEntity morning = MedicationManagementEntity.builder()
-                    .medicineBag(medicineBag)
-                    .notificationDate(currentDate)
-                    .notificationTime(morningTime)
-                    .totalIntakeConfirmed(false)
-                    .medicineList(new ArrayList<>())
-                    .build();
-            for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
-                if (medicineDTO.getMorningTimebox()) {
-                    IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
-                            .medicationManagement(morning)
-                            .medicineName(medicineDTO.getMedicineName())
-                            .dosagePerIntake(medicineDTO.getDosagePerIntake())
-                            .intakeConfirmed(false)
-                            .build();
-                    morning.getMedicineList().add(list);
-                }
+            if (morningTime != null) {
+                MedicationManagementEntity morning = MedicationManagementEntity.builder()
+                        .medicineBag(medicineBag)
+                        .notificationDate(currentDate)
+                        .notificationTime(morningTime)
+                        .totalIntakeConfirmed(false)
+                        .medicineList(new ArrayList<>())
+                        .build();
+                for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
+                    if (medicineDTO.getMorningTimebox()) {
+                        IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
+                                .medicationManagement(morning)
+                                .medicineName(medicineDTO.getMedicineName())
+                                .dosagePerIntake(medicineDTO.getDosagePerIntake())
+                                .intakeConfirmed(false)
+                                .build();
+                        morning.getMedicineList().add(list);
+                    }
 
+                }
+                //아침약 복용리스트 등록
+                medicineBag.getMedicationManagementEntities().add(morning);
             }
-            //아침약 복용리스트 등록
-            medicineBag.getMedicationManagementEntities().add(morning);
 
             // 점심 약에대한 테이블 만들기
-            MedicationManagementEntity lunch = MedicationManagementEntity.builder()
-                    .medicineBag(medicineBag)
-                    .notificationDate(currentDate)
-                    .notificationTime(lunchTime)
-                    .totalIntakeConfirmed(false)
-                    .medicineList(new ArrayList<>())
-                    .build();
-            for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
-                if (medicineDTO.getLunchTimebox()) {
-                    IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
-                            .medicationManagement(lunch)
-                            .medicineName(medicineDTO.getMedicineName())
-                            .dosagePerIntake(medicineDTO.getDosagePerIntake())
-                            .intakeConfirmed(false)
-                            .build();
-                    lunch.getMedicineList().add(list);
+            if (lunchTime != null) {
+                MedicationManagementEntity lunch = MedicationManagementEntity.builder()
+                        .medicineBag(medicineBag)
+                        .notificationDate(currentDate)
+                        .notificationTime(lunchTime)
+                        .totalIntakeConfirmed(false)
+                        .medicineList(new ArrayList<>())
+                        .build();
+                for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
+                    if (medicineDTO.getLunchTimebox()) {
+                        IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
+                                .medicationManagement(lunch)
+                                .medicineName(medicineDTO.getMedicineName())
+                                .dosagePerIntake(medicineDTO.getDosagePerIntake())
+                                .intakeConfirmed(false)
+                                .build();
+                        lunch.getMedicineList().add(list);
+                    }
                 }
+
+                //점심약 복용리스트 등록
+                medicineBag.getMedicationManagementEntities().add(lunch);
             }
 
-            //점심약 복용리스트 등록
-            medicineBag.getMedicationManagementEntities().add(lunch);
 
             // 저녁 약에대한 테이블 만들기
-            MedicationManagementEntity dinner = MedicationManagementEntity.builder()
-                    .medicineBag(medicineBag)
-                    .notificationDate(currentDate)
-                    .notificationTime(dinnerTime)
-                    .totalIntakeConfirmed(false)
-                    .medicineList(new ArrayList<>())
-                    .build();
-            for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
-                if (medicineDTO.getDinnerTimebox()) {
-                    IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
-                            .medicationManagement(dinner)
-                            .medicineName(medicineDTO.getMedicineName())
-                            .dosagePerIntake(medicineDTO.getDosagePerIntake())
-                            .intakeConfirmed(false)
-                            .build();
-                    dinner.getMedicineList().add(list);
+            if (dinnerTime != null) {
+                MedicationManagementEntity dinner = MedicationManagementEntity.builder()
+                        .medicineBag(medicineBag)
+                        .notificationDate(currentDate)
+                        .notificationTime(dinnerTime)
+                        .totalIntakeConfirmed(false)
+                        .medicineList(new ArrayList<>())
+                        .build();
+                for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
+                    if (medicineDTO.getDinnerTimebox()) {
+                        IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
+                                .medicationManagement(dinner)
+                                .medicineName(medicineDTO.getMedicineName())
+                                .dosagePerIntake(medicineDTO.getDosagePerIntake())
+                                .intakeConfirmed(false)
+                                .build();
+                        dinner.getMedicineList().add(list);
+                    }
                 }
+                //저녁약 복용리스트 등록
+                medicineBag.getMedicationManagementEntities().add(dinner);
             }
-            //저녁약 복용리스트 등록
-            medicineBag.getMedicationManagementEntities().add(dinner);
+
+
+
 
             // 자기전 약에대한 테이블 만들기
-            MedicationManagementEntity beforeSleep = MedicationManagementEntity.builder()
-                    .medicineBag(medicineBag)
-                    .notificationDate(currentDate)
-                    .notificationTime(beforeSleepTime)
-                    .totalIntakeConfirmed(false)
-                    .medicineList(new ArrayList<>())
-                    .build();
-            for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
-                if (medicineDTO.getBeforeSleepTimebox()) {
-                    IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
-                            .medicationManagement(beforeSleep)
-                            .medicineName(medicineDTO.getMedicineName())
-                            .dosagePerIntake(medicineDTO.getDosagePerIntake())
-                            .intakeConfirmed(false)
-                            .build();
-                    beforeSleep.getMedicineList().add(list);
+            if (beforeSleepTime != null) {
+                MedicationManagementEntity beforeSleep = MedicationManagementEntity.builder()
+                        .medicineBag(medicineBag)
+                        .notificationDate(currentDate)
+                        .notificationTime(beforeSleepTime)
+                        .totalIntakeConfirmed(false)
+                        .medicineList(new ArrayList<>())
+                        .build();
+                for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
+                    if (medicineDTO.getBeforeSleepTimebox()) {
+                        IntakeMedicineListEntity list = IntakeMedicineListEntity.builder()
+                                .medicationManagement(beforeSleep)
+                                .medicineName(medicineDTO.getMedicineName())
+                                .dosagePerIntake(medicineDTO.getDosagePerIntake())
+                                .intakeConfirmed(false)
+                                .build();
+                        beforeSleep.getMedicineList().add(list);
+                    }
                 }
+                //자기전 약 복용리스트 등록
+                medicineBag.getMedicationManagementEntities().add(beforeSleep);
             }
-            //자기전 약 복용리스트 등록
-            medicineBag.getMedicationManagementEntities().add(beforeSleep);
+
 
             //LocalDate는 불변(immutable) 객체이므로 반환된 값을 다시 저장해줘야함
             currentDate = currentDate.plusDays(1); //시작 날짜에서 하루씩 더하기

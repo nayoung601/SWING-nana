@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface MedicineBagRepository extends JpaRepository<MedicineBagEntity,Long> {
+    
+    // 날짜가 들어오면 해당하는 registrationdate와 enbdate의 사이의 해당하는지 확인하고 존재하면 MedicineBagEntity 리스트를 돌려줌
     @Query("SELECT m FROM MedicineBagEntity m WHERE m.userId.userId = :userId AND :date BETWEEN m.registrationDate AND m.endDate")
     List<MedicineBagEntity> findByUserIdAndDateBetween(@Param("userId") Long userId, @Param("date") LocalDate date);
 
