@@ -2,6 +2,9 @@ package com.example.swingback.medicine.medicinebag.service;
 
 import com.example.swingback.User.entity.UserEntity;
 import com.example.swingback.User.repository.UserRepository;
+import com.example.swingback.calendar.common.BuilderCalendar;
+import com.example.swingback.calendar.entity.CalendarEntity;
+import com.example.swingback.calendar.repository.CalendarRepository;
 import com.example.swingback.error.CustomException;
 import com.example.swingback.medicine.medicationmanagement.dto.IntakeMedicineListDTO;
 import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
@@ -35,6 +38,7 @@ public class MedicineBagSservice {
     private final UserRepository userRepository;
     private final IntakeMedicineListRepository intakeMedicineListRepository;
     private final MedicationManegementRepository medicationManegementRepository;
+    private final BuilderCalendar builderCalendar;
 
     public void saveMedicineInputAndBag(MedicineBagDTO medicineBagDTO) {
         //요청을 보내는 회원의 회원정보 가져오기
@@ -214,6 +218,14 @@ public class MedicineBagSservice {
 
         // MedicineBagEntity와 관련된 MedicineInputEntity들을 저장
         medicineBagRepository.save(medicineBag);
+
+        builderCalendar.
+                builderCalendarEntity(
+                        requestUserEntity,
+                        medicineBagDTO.getMedicineBagTitle(),
+                        medicineBagDTO.getRegistrationDate(),
+                        medicineBagDTO.getEndDate(),
+                        "medicine");
 
     }
 
