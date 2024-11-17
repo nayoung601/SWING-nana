@@ -21,11 +21,11 @@ public class UserExtraInfoController {
 
 
     @PostMapping("/api/extrainfo") // 유저의 추가 정보를 받아오는 컨트롤러
-    public ResponseEntity<UserEntity> saveUserExtraInfo(@RequestBody UserExtraInfoDTO userExtraInfoDTO) {
-            Optional<UserEntity> extraInfo = userService.getExtraInfo(userExtraInfoDTO);
+    public ResponseEntity<?> saveUserExtraInfo(@RequestBody UserExtraInfoDTO userExtraInfoDTO) {
+        String extraInfo = userService.getExtraInfo(userExtraInfoDTO);
 
-            return extraInfo.isPresent() ?
-                    ResponseEntity.status(HttpStatus.OK).build() :  // 성공 상태만 반환
+        return (extraInfo!=null) ?
+                    ResponseEntity.status(HttpStatus.OK).body(extraInfo) :  // 성공 상태만 반환
                     ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();  // 실패 시 상태 코드만 반환
         }
 }

@@ -3,10 +3,16 @@ package com.example.swingback.User.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class UserExtraInfoDTO {
 
     @NotEmpty(message = "구성원 별명은 필수항목입니다.")
