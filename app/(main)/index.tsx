@@ -1,47 +1,53 @@
-import { View, Text, StyleSheet, Platform } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Calendar from '@/components/Calendar';
 import MedicationList from '@/components/MedicationList';
 import RewardPoints from '@/components/RewardPoint';
+import { useUserData } from '@/context/UserDataContext'; // UserDataContext 사용
 
-export default function HomeScreen() {
-  // AsyncStorage.getAllKeys().then((keys) => {
-  //   AsyncStorage.multiGet(keys).then((result) => {
-  //     console.log(result);
-  //   });
-  // }); //async storage 저장된 값 로그
-  return (
-    <View style={styles.container}>
-      <Calendar style={styles.calendar} />
-      <MedicationList userId = {1} />
-      <RewardPoints />
-    </View>
-  );
+export default function HomeScreen({ navigation }) {
+    const { user } = useUserData(); // 현재 로그인된 유저 정보 가져오기
 
+    // AsyncStorage 로그 확인 (디버깅 용도)
+    AsyncStorage.getAllKeys().then((keys) => {
+        AsyncStorage.multiGet(keys).then((result) => {
+            console.log('AsyncStorage contents:', result);
+        });
+    });
+    
+
+    return (
+        <View style={styles.container}>
+            <Calendar style={styles.calendar} />
+            {user && user.userId ? (
+                <MedicationList navigation={navigation} userId={user.userId} /> 
+            ) : (
+                <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>유저 정보를 불러오는 중입니다.</Text>
+                </View>
+            )}
+            <RewardPoints />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F4FF',
-  },
-  header: {
-    width: '100%',
-    backgroundColor: '#AFB8DA',
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  calendar: {
-    width: '100%',       
-    paddingHorizontal: 0,  
-  },
-  contentText: {
-    fontSize: 18,
-    marginTop: 16,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#F0F4FF',
+    },
+    calendar: {
+        width: '100%',
+        paddingHorizontal: 0,
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        fontSize: 16,
+        color: 'red',
+    },
 });

@@ -12,9 +12,10 @@ export const UserDataProvider = ({ children }) => {
     const initializeUser = async () => {
       try {
         const userName = await AsyncStorage.getItem('userName');
-        if (userName) {
+        const userId = await AsyncStorage.getItem('userId'); 
+        if (userName && userId) {
           const familyRole = await AsyncStorage.getItem('familyRole');
-          setUser({ name: userName, familyRole });
+          setUser({ userId: parseInt(userId, 10), name: userName, familyRole });
         }
       } catch (error) {
         console.error('Error initializing user data:', error);
@@ -29,13 +30,16 @@ export const UserDataProvider = ({ children }) => {
   const updateUser = async (userData) => {
     setUser(userData);
     await AsyncStorage.setItem('userName', userData.name);
+    await AsyncStorage.setItem('userId', String(userData.userId)); 
     await AsyncStorage.setItem('familyRole', userData.familyRole || '');
   };
+
 
   // 로그아웃 함수
   const logout = async () => {
     setUser(null);
     await AsyncStorage.removeItem('userName');
+    await AsyncStorage.removeItem('userId'); 
     await AsyncStorage.removeItem('familyRole');
   };
 

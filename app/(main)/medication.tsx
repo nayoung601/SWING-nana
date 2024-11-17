@@ -1,12 +1,20 @@
 import { StyleSheet, View, Text } from 'react-native';
 import Calendar from '@/components/Calendar';
+import MedicationManagement from '@/components/MedicaitonManagement';
+import { useUserData } from '@/context/UserDataContext';
 
-export default function Medication(){
-    return(
-      <View style={styles.container}>
-        <Calendar style={styles.calendar}/>
+export default function Medication() {
+  const { user } = useUserData();
+
+  return (
+    <View style={styles.container}>
+      <Calendar style={styles.calendar} />
+      {/* MedicationManagement 컴포넌트 */}
+      <View style={styles.medicationManagementContainer}>
+        <MedicationManagement userId={user.userId} />
       </View>
-    );
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -26,8 +34,13 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   calendar: {
-    width: '100%',       
-    paddingHorizontal: 0,  
+    width: '100%',
+    paddingHorizontal: 0,
+  },
+  medicationManagementContainer: {
+    flex: 1, // 남은 화면 공간을 채움
+    marginTop: 10,
+    paddingHorizontal: 10,
   },
   contentText: {
     fontSize: 18,

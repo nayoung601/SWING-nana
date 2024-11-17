@@ -19,7 +19,7 @@ export default function LoadingPage() {
 
         // 사용자 정보 업데이트
         if (data.name) {
-          await updateUser({ name: data.name, familyRole: data.familyRole });
+          await updateUser({ name: data.name, userId: data.userId, familyRole: data.familyRole });
         }
 
         // family_role에 따라 페이지 라우팅
