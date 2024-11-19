@@ -1,16 +1,16 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-// import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useUserData } from '@/context/UserDataContext';
-import { Link } from 'expo-router';  // Link 임포트
+import { Link, useRouter } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { user } = useUserData(); 
+  const { user } = useUserData();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -22,9 +22,9 @@ export default function TabLayout() {
           height: 75,
           paddingBottom: 20,
         },
-        headerShown: true, 
+        headerShown: true,
         headerStyle: { backgroundColor: '#AFB8DA' },
-        headerTitleAlign: 'left', 
+        headerTitleAlign: 'left',
         headerTitle: () => (
           <View style={styles.headerContainer}>
             <Text style={styles.familyRoleText}>{user?.familyRole || '사용자'}</Text>
@@ -35,13 +35,14 @@ export default function TabLayout() {
             <Link href="/notification">
               <TabBarIcon name="notifications" color="#ffffff" />
             </Link>
-
             <Link href="/chat">
               <TabBarIcon name="chatbubbles" color="#ffffff" />
             </Link>
           </View>
         ),
-      }}>
+      }}
+    >
+      {/* 하단바에 표시될 탭들 */}
       <Tabs.Screen
         name="index"
         options={{
@@ -57,6 +58,27 @@ export default function TabLayout() {
           title: '복약 관리',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'medkit' : 'medkit-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="registerOptions"
+        options={{
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...props}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                top: -20,
+              }}
+              onPress={() => router.push('/(main)/registerOptions')} // 중앙 버튼 클릭 시 이동
+            >
+              <Image
+                source={require('../../assets/images/plus_button.png')}
+                style={{ width: 60, height: 60 }}
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -89,9 +111,9 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   familyRoleText: {
-    color: '#ffffff', 
+    color: '#ffffff',
     fontSize: 18,
-    fontWeight: 'bold',     
+    fontWeight: 'bold',
   },
   headerRight: {
     flexDirection: 'row',

@@ -31,6 +31,10 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "googleVisionApiKey": "AIzaSyBv893TcqdJGkM4c-7byvuG2zf3QhYWZyU"
     }
+
   }
-}
+} 
