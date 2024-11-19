@@ -74,8 +74,7 @@ export default function UserPhoto() {
         pathname: '/utils/OCRResult',
         params: {
           photoUri: photoUri,
-          prescription_date: result.prescription_date,
-          datePosition: JSON.stringify(result.datePosition),
+          registrationDate: result.registrationDate,
           medicineList: JSON.stringify(result.medicineList),
         },
       });

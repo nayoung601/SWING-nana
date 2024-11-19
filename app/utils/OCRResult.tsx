@@ -3,24 +3,27 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import OCRLayout from './OCRLayout'; // OCRLayout.tsx 파일 경로
 import { useLocalSearchParams } from 'expo-router';
 
+// Medicine 인터페이스 수정
 interface Medicine {
-  name: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
+  medicineName: string; // 약물 이름
+  dosagePerIntake: number; // 1회 복용량
+  frequencyIntake: number; // 복용 횟수
+  durationIntake: number; // 복용 기간
 }
 
 const OCRResult: React.FC = () => {
-  const { photoUri, prescription_date, medicineList } = useLocalSearchParams<{
+  const { photoUri, registrationDate, medicineList } = useLocalSearchParams<{
     photoUri: string;
-    prescription_date: string;
+    registrationDate: string;
     medicineList: string;
   }>();
 
   // 데이터 확인
   console.log('photoUri:', photoUri);
+  console.log('registrationDate:', registrationDate);
   console.log('medicineList:', medicineList);
 
+  // medicineList 파싱
   const parsedMedicineList: Medicine[] = medicineList ? JSON.parse(medicineList) : [];
 
   return (
@@ -33,15 +36,19 @@ const OCRResult: React.FC = () => {
           <Text style={styles.errorText}>이미지가 없습니다.</Text>
         )}
 
-        {/* 처방일자 출력 */}
-        <Text style={styles.prescriptionDate}>처방일자: {prescription_date}</Text>
+        {/* 조제일자 출력 */}
+        {registrationDate ? (
+          <Text style={styles.registrationDate}>조제일자: {registrationDate}</Text>
+        ) : (
+          <Text style={styles.errorText}>조제일자가 없습니다.</Text>
+        )}
 
         {/* 약물 정보 출력 */}
         {parsedMedicineList.length > 0 ? (
           parsedMedicineList.map((medicine, index) => (
             <View key={index} style={styles.medicineContainer}>
               <Text style={styles.medicineText}>
-                {medicine.name} - {medicine.dosage} {medicine.frequency} {medicine.duration}
+                {medicine.medicineName} - {medicine.dosagePerIntake}정씩 {medicine.frequencyIntake}회 {medicine.durationIntake}일분
               </Text>
             </View>
           ))
@@ -63,16 +70,22 @@ const styles = StyleSheet.create({
     height: 300,
     marginBottom: 20,
   },
-  prescriptionDate: {
+  registrationDate: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   medicineContainer: {
-    marginVertical: 5,
+    marginVertical: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
   medicineText: {
     fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   noMedicineText: {
     fontSize: 16,
