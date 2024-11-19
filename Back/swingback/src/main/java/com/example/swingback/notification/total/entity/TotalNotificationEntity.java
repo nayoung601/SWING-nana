@@ -15,6 +15,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "total_notification")
 public class TotalNotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class TotalNotificationEntity {
 //    private Long responseId;
 
     @ManyToOne
-    @JoinColumn(name = "responseId") //알림 받는 사람 아이디
+    @JoinColumn(name = "response_id") //알림 받는 사람 아이디
     private UserEntity responseId;
 
     @Column(name = "request_id") // 요청 보낸사람 아이디

@@ -16,7 +16,7 @@ public class IntakeMedicineListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "intake_medicine_list_id")
     private Long intakeMedicineListId;
 
     @ManyToOne // 복약관리 테이블

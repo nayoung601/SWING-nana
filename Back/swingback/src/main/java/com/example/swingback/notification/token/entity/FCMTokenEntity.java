@@ -14,11 +14,12 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "FCMToken")
+@Table(name = "fcm_token")
 public class FCMTokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "token_id")
     private Long tokenId;
 
     @ManyToOne

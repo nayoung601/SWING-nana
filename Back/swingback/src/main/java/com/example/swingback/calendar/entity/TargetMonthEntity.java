@@ -19,12 +19,13 @@ public class TargetMonthEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "target_month_id")
     private Long targetMonthId;
 
     @ManyToOne
     @JoinColumn(name = "calendar_id")
     private CalendarEntity calendarId;
 
-    @Column
+    @Column(name = "target_month")
     private LocalDate targetMonth;
 }

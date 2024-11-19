@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class BatchConfig {
-    @Primary
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.batch")
     public DataSource metaDBSource() {
@@ -21,7 +20,6 @@ public class BatchConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
     @Bean
     public PlatformTransactionManager metaTransactionManager() {
 

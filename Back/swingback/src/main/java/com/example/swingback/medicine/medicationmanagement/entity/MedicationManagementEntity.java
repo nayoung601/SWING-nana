@@ -23,17 +23,17 @@ import java.util.List;
 public class MedicationManagementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "medication_management_id")
     private Long medicationManagementId;
 
     @ManyToOne // 약봉투 id
     @JoinColumn(name = "medicine_bag_id", nullable = false)
     private MedicineBagEntity medicineBag;
 
-    @Column
+    @Column(name = "notification_date")
     private LocalDate notificationDate; // 알림 날짜 (기간내의 날짜)
 
-    @Column
+    @Column(name = "notification_time")
     private LocalTime notificationTime; // 알림 시간 (사용자가 설정한 알림 시간)
 
     @Column(name = "total_intake_confirmed", nullable = false) // 복용 확인

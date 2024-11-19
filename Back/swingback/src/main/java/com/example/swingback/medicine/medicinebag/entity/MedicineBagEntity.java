@@ -55,16 +55,16 @@ public class MedicineBagEntity {
     private List<MedicationManagementEntity> medicationManagementEntities;
 
     // 알림 시간 목록 설정
-    @Column
+    @Column(name = "morning_time")
     private LocalDateTime morningTime;
 
-    @Column
+    @Column(name = "lunch_time")
     private LocalDateTime lunchTime;
 
-    @Column
+    @Column(name = "dinner_time")
     private LocalDateTime dinnerTime;
 
-    @Column
+    @Column(name = "before_sleep_time")
     private LocalDateTime beforeSleepTime;
 
     //가족에게 보여줄지 안보여줄지 설정

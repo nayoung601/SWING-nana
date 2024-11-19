@@ -31,6 +31,7 @@ import java.util.HashMap;
         transactionManagerRef = "dataTransactionManager"
 )
 public class DataConfig {
+    @Primary
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.primary")
     public DataSource dataDBSource() {
@@ -66,6 +67,7 @@ public class DataConfig {
         return em;
     }
 
+    @Primary
     @Bean
     public PlatformTransactionManager dataTransactionManager() {
 
