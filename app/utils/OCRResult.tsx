@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import OCRLayout from './OCRLayout';
 import { useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
+
 
 interface Medicine {
   medicineName: string;
@@ -22,6 +24,7 @@ interface Medicine {
 }
 
 const OCRResult: React.FC = () => {
+  const router = useRouter();
   const { photoUri, registrationDate, medicineList } = useLocalSearchParams<{
     photoUri: string;
     registrationDate: string;
@@ -48,6 +51,17 @@ const OCRResult: React.FC = () => {
   const toggleEditing = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleRegister = () => {
+    router.push({
+      pathname: '../utils/setAlarm',
+      params: {
+        medicineList: JSON.stringify(editableMedicineList),
+        registrationDate: editableDate,
+      },
+    });
+  };
+
 
   return (
     <OCRLayout>
@@ -247,7 +261,7 @@ const OCRResult: React.FC = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.registerButton}
-              onPress={() => console.log('등록하기 버튼 클릭')}
+              onPress={handleRegister} // 등록 버튼 클릭 시
             >
               <Text style={styles.registerButtonText}>등록하기</Text>
             </TouchableOpacity>
