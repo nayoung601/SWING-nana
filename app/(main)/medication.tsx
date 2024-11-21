@@ -1,18 +1,27 @@
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import Calendar from '@/components/Calendar';
 import MedicationManagement from '@/components/MedicaitonManagement';
-import { useUserData } from '@/context/UserDataContext';
+import dayjs from 'dayjs';
+import { useUserData } from '@/context/UserDataContext'; // UserDataContext 사용
 
-export default function Medication() {
-  const { user } = useUserData();
+export default function MedicationManagementTab() {
+  const { user } = useUserData(); // UserDataContext에서 user 정보 가져오기
+  const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD')); // 초기값: 오늘 날짜
 
   return (
     <View style={styles.container}>
-      <Calendar style={styles.calendar} />
-      {/* MedicationManagement 컴포넌트 */}
-      <View style={styles.medicationManagementContainer}>
-        <MedicationManagement userId={user.userId} />
-      </View>
+      {/* 캘린더 컴포넌트에 날짜 상태와 변경 함수 전달 */}
+      <Calendar selectedDate={selectedDate} onDateChange={setSelectedDate} />
+
+      {/* MedicationManagement 컴포넌트에 선택된 날짜와 userId 전달 */}
+      {user && user.userId ? (
+        <MedicationManagement selectedDate={selectedDate} userId={user.userId} />
+      ) : (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>유저 정보를 불러오는 중입니다.</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -21,29 +30,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F0F4FF',
+    padding: 0,
   },
-  header: {
-    width: '100%',
-    backgroundColor: '#AFB8DA',
-    paddingVertical: 10,
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  calendar: {
-    width: '100%',
-    paddingHorizontal: 0,
-  },
-  medicationManagementContainer: {
-    flex: 1, // 남은 화면 공간을 채움
-    marginTop: 10,
-    paddingHorizontal: 10,
-  },
-  contentText: {
-    fontSize: 18,
-    marginTop: 16,
+  errorText: {
+    fontSize: 16,
+    color: 'red',
   },
 });

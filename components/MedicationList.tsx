@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useDate } from '../context/DateContext';
 import { Link } from 'expo-router';
 
-const MedicationList = ({ userId }) => {
-    const { selectedDate } = useDate();
+const MedicationList = ({ userId, selectedDate }) => {
     const [medicationData, setMedicationData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         borderRadius: 5,
         resizeMode: 'contain',
-        alignContent: 'center'
+        alignContent: 'center',
     },
     medicationTextContainer: {
         alignItems: 'center',

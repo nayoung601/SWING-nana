@@ -31,7 +31,7 @@ export default function OCRLayout({ children }: { children: React.ReactNode }) {
 
       {/* 하단바 */}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.push('/(main)/index')} style={styles.tabButton}>
+        <TouchableOpacity onPress={() => router.push('/')} style={styles.tabButton}>
           <TabBarIcon name="home-outline" color="#595958" />
           <Text style={styles.tabLabel}>홈</Text>
         </TouchableOpacity>

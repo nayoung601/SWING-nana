@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text } from 'react-native';
 // import Calendar from '@/components/Calendar';
 
-export default function Health(){
+export default function FamilyMedication(){
     return(
         <View style={styles.container}>
-          {/* <Calendar style={styles.calendar}/> */}
+            <Text>가족 복약관리 페이지</Text>
         </View>
       );
   }
@@ -25,10 +25,10 @@ export default function Health(){
       fontWeight: 'bold',
       color: '#fff',
     },
-    // calendar: {
-    //   width: '100%',       
-    //   paddingHorizontal: 0,  
-    // },
+    calendar: {
+      width: '100%',       
+      paddingHorizontal: 0,  
+    },
     contentText: {
       fontSize: 18,
       marginTop: 16,

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
-import { useDate } from '@/context/DateContext'; // DateContext 사용
 
-const MedicationManagement = ({ userId }) => {
-    const { selectedDate } = useDate(); // 선택된 날짜를 Context에서 가져옴
+const MedicationManagement = ({ userId, selectedDate }) => {
     const [medicationData, setMedicationData] = useState([]);
     const [loading, setLoading] = useState(true);
 

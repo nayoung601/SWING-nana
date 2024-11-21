@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useDate } from '../context/DateContext';
 import dayjs from 'dayjs';
 
-const Calendar = ({ style }) => {
-  const { selectedDate, setSelectedDate } = useDate();
+const Calendar = ({ selectedDate, onDateChange, style }) => {
   const [weekDates, setWeekDates] = useState([]);
 
   // 선택된 날짜를 기준으로 일주일 날짜 목록을 계산하는 함수
@@ -16,29 +14,26 @@ const Calendar = ({ style }) => {
     return week;
   };
 
-  // 초기 로드 시 오늘을 기준으로 일주일 날짜를 설정
+  // 초기 로드 및 날짜 변경 시 일주일 날짜 업데이트
   useEffect(() => {
     setWeekDates(generateWeekDates(selectedDate));
   }, [selectedDate]);
 
   // 날짜를 선택했을 때
   const handleDateSelect = (date) => {
-    setSelectedDate(date); // DateContext의 selectedDate 업데이트
-    console.log("Selected Date:", date); // 선택된 날짜 로그 출력
+    onDateChange(date); // 부모 컴포넌트에 날짜 전달
   };
 
   // 전주로 이동
   const handlePrevWeek = () => {
     const newCenterDate = dayjs(selectedDate).subtract(7, 'day').format('YYYY-MM-DD');
-    setSelectedDate(newCenterDate);
-    setWeekDates(generateWeekDates(newCenterDate));
+    onDateChange(newCenterDate); // 부모 컴포넌트에 전달
   };
 
   // 다음 주로 이동
   const handleNextWeek = () => {
     const newCenterDate = dayjs(selectedDate).add(7, 'day').format('YYYY-MM-DD');
-    setSelectedDate(newCenterDate);
-    setWeekDates(generateWeekDates(newCenterDate));
+    onDateChange(newCenterDate); // 부모 컴포넌트에 전달
   };
 
   return (
@@ -87,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     paddingVertical: 12,
-    backgroundColor: '#AFB8DA', 
+    backgroundColor: '#AFB8DA',
   },
   selectedDateText: {
     fontSize: 18,

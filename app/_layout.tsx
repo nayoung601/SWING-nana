@@ -3,14 +3,15 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserDataProvider } from '../context/UserDataContext';
-import { DateProvider } from '@/context/DateContext';
+import { FamilyProvider } from '@/context/FamilyContext';
+// import { DateProvider } from '@/context/DateContext';
 
 export default function Layout() {
   const colorScheme = useColorScheme();
 
   return (
     <UserDataProvider>
-      <DateProvider>
+      <FamilyProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack screenOptions={{ 
             headerShown: false,
@@ -25,7 +26,7 @@ export default function Layout() {
             <Stack.Screen name="(main)" />
           </Stack>
         </ThemeProvider>
-      </DateProvider>
+      </FamilyProvider>
     </UserDataProvider>
   );
 }
