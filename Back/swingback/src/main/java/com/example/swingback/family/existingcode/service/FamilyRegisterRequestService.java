@@ -101,11 +101,11 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
+                        null,
                         messageTemplateDTO
                         );
         // FCM알림 전송
-        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
     }
 
     public void requestAccept(FamilyRegisterResponseDTO familyRegisterResponseDTO) {
@@ -150,10 +150,11 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
-                        messageTemplateDTO);
+                        null,
+                        messageTemplateDTO
+                        );
         // FCM알림 전송
-        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
 
     }
 
@@ -197,9 +198,9 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
+                        null,
                         messageTemplateDTO);
         // FCM알림 전송
-        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
     }
 }

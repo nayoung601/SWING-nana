@@ -3,10 +3,7 @@ package com.example.swingback.notification.total.entity;
 
 import com.example.swingback.User.entity.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -53,4 +50,8 @@ public class TotalNotificationEntity {
 
     @Column(name = "message") // 알림창에 띄워줄 알림 메시지
     private String message;
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
 }

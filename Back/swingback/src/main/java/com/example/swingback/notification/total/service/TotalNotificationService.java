@@ -12,6 +12,7 @@ import com.example.swingback.notification.total.DTO.NotificationTableDTO;
 import com.example.swingback.notification.total.entity.TotalNotificationEntity;
 import com.example.swingback.notification.total.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TotalNotificationService {
 
     private final UserRepository userRepository;
@@ -80,8 +82,14 @@ public class TotalNotificationService {
         }
 
         // UserEntity를 이용해서 가장 최신의 알림 10개 리스트를 가져옴
+        // sendTime을 기준으로 가장 최근 순으로 상위 10개를 가져오는 메서드 이용함
         List<TotalNotificationEntity> notificationEntityList
                 = notificationRepository.findTop10ByResponseIdOrderBySendTimeDesc(byUserId);
+//        for (TotalNotificationEntity totalNotificationEntity : notificationEntityList) {
+//            log.info("NotificationId : {}",totalNotificationEntity.getNotificationId());
+//            log.info("ScheduledTime : {}",totalNotificationEntity.getScheduledTime());
+//            log.info("SendTime : {}",totalNotificationEntity.getSendTime());
+//        }
         if (notificationEntityList.isEmpty()) {
             throw new CustomException("알림이 존재하지 않습니다.");
         }
@@ -103,6 +111,9 @@ public class TotalNotificationService {
                 })
                 .filter(Objects::nonNull) // null 제거
                 .toList();
+//        for (NotificationTableDTO notificationTableDTO : notification) {
+//            log.info("NotificationId : {}",notificationTableDTO.getNotificationId());
+//        }
         return notification;
     }
 
