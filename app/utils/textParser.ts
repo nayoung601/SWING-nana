@@ -25,7 +25,7 @@ export const parseOCRText = (text: string): PrescriptionInfo => {
       const [_, name, details] = match;
 
       // "환자정", "병원정", "코팅정" 제외
-      if (name === "환자정" || name === "병원정" || name === "필름코팅정") continue;
+      if (name === "환자정" || name === "병원정" || name === "필름코팅정" || name === "루미늄호일포") continue;
 
       const medicine: Medicine = {
         medicineName: name.trim(),
