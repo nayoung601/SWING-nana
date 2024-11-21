@@ -53,7 +53,6 @@ public class UserService {
         if (authentication != null && authentication.isAuthenticated()) {
             // 현재 인증된 사용자의 providerId를 가져옴
             CustomOAuth2User userDetails = (CustomOAuth2User) authentication.getPrincipal();
-            log.info("인증 정보 확인용: {}",userDetails.getProviderId());
             if (userDetails==null) {
                 throw new CustomException("권한이 없습니다. 잘못된 사용자 요청입니다.");
             }

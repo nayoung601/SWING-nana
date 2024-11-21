@@ -13,4 +13,6 @@ public interface NotificationRepository extends JpaRepository<TotalNotificationE
     // sendTime을 기준으로 가장 최근 순으로 상위 10개를 가져오는 메서드
     List<TotalNotificationEntity> findTop10ByResponseIdOrderBySendTimeDesc(UserEntity responseId);
 
+    //
+
 }

@@ -5,6 +5,7 @@ import com.example.swingback.User.repository.UserRepository;
 import com.example.swingback.calendar.common.BuilderCalendar;
 import com.example.swingback.calendar.entity.CalendarEntity;
 import com.example.swingback.calendar.repository.CalendarRepository;
+import com.example.swingback.commons.NotificationType;
 import com.example.swingback.error.CustomException;
 import com.example.swingback.medicine.medicationmanagement.dto.IntakeMedicineListDTO;
 import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
@@ -17,16 +18,18 @@ import com.example.swingback.medicine.medicineinput.dto.MedicineInputDTO;
 import com.example.swingback.medicine.medicinebag.entity.MedicineBagEntity;
 import com.example.swingback.medicine.medicinebag.repository.MedicineBagRepository;
 import com.example.swingback.medicine.medicineinput.entity.MedicineInputEntity;
+import com.example.swingback.notification.message.dto.MessageTemplateDTO;
+import com.example.swingback.notification.message.service.MessageTemplateService;
+import com.example.swingback.notification.total.service.TotalNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +42,8 @@ public class MedicineBagSservice {
     private final IntakeMedicineListRepository intakeMedicineListRepository;
     private final MedicationManegementRepository medicationManegementRepository;
     private final BuilderCalendar builderCalendar;
+    private final MessageTemplateService messageTemplateService;
+    private final TotalNotificationService totalNotificationService;
 
     public void saveMedicineInputAndBag(MedicineBagDTO medicineBagDTO) {
         //요청을 보내는 회원의 회원정보 가져오기
@@ -86,6 +91,17 @@ public class MedicineBagSservice {
             medicineBag.getMedicinesInput().add(medicineInput);
         }
 
+        //메시지 템플릿
+        Long messageTemplate = 4L;
+        Map<String, String> name = Map.of("medicine", medicineBagDTO.getMedicineBagTitle());
+        /*
+        알림보낼 메시지 템플릿을 불러옴
+        messageTemplate : 템플릿 번호
+        variables : 템플릿에 변수를 추가해서 변수를 어떻게 바꿔서 보여줄지 설정하는 부분
+         */
+        MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
+
+
         //알림 시간 추출
         LocalTime morningTime=null;
         LocalTime lunchTime=null;
@@ -128,8 +144,23 @@ public class MedicineBagSservice {
                     }
 
                 }
-                //아침약 복용리스트 등록
                 medicineBag.getMedicationManagementEntities().add(morning);
+
+                LocalDateTime localDateTime = LocalDateTime.of(currentDate, morningTime);
+                // LocalDateTime을 Date로 변환
+                Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+                //아침약 복용리스트 등록
+                totalNotificationService
+                        .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
+                                requestUserEntity.getUserId(),
+                                requestUserEntity,
+                                false,
+                                medicineBagDTO.getHidden(),
+                                date,
+                                null,
+                                messageTemplateDTO
+                        );
             }
 
             // 점심 약에대한 테이블 만들기
@@ -155,6 +186,22 @@ public class MedicineBagSservice {
 
                 //점심약 복용리스트 등록
                 medicineBag.getMedicationManagementEntities().add(lunch);
+
+                LocalDateTime localDateTime = LocalDateTime.of(currentDate, lunchTime);
+                // LocalDateTime을 Date로 변환
+                Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+                //아침약 복용리스트 등록
+                totalNotificationService
+                        .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
+                                requestUserEntity.getUserId(),
+                                requestUserEntity,
+                                false,
+                                medicineBagDTO.getHidden(),
+                                date,
+                                null,
+                                messageTemplateDTO
+                        );
             }
 
 
@@ -180,6 +227,23 @@ public class MedicineBagSservice {
                 }
                 //저녁약 복용리스트 등록
                 medicineBag.getMedicationManagementEntities().add(dinner);
+
+                LocalDateTime localDateTime = LocalDateTime.of(currentDate, dinnerTime);
+                // LocalDateTime을 Date로 변환
+                Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+                //아침약 복용리스트 등록
+                totalNotificationService
+                        .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
+                                requestUserEntity.getUserId(),
+                                requestUserEntity,
+                                false,
+                                medicineBagDTO.getHidden(),
+                                date,
+                                null,
+                                messageTemplateDTO
+                        );
+
             }
 
 
@@ -207,6 +271,23 @@ public class MedicineBagSservice {
                 }
                 //자기전 약 복용리스트 등록
                 medicineBag.getMedicationManagementEntities().add(beforeSleep);
+
+                LocalDateTime localDateTime = LocalDateTime.of(currentDate, beforeSleepTime);
+                // LocalDateTime을 Date로 변환
+                Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+                //아침약 복용리스트 등록
+                totalNotificationService
+                        .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
+                                requestUserEntity.getUserId(),
+                                requestUserEntity,
+                                false,
+                                medicineBagDTO.getHidden(),
+                                date,
+                                null,
+                                messageTemplateDTO
+                        );
+
             }
 
 
@@ -226,6 +307,11 @@ public class MedicineBagSservice {
                         medicineBagDTO.getRegistrationDate(),
                         medicineBagDTO.getEndDate(),
                         "medicine");
+
+
+
+        // FCM알림 전송
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
 
     }
 

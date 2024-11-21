@@ -22,25 +22,26 @@ public class CalendarEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "calendar_id")
     private Long calendarId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
-    @Column
+    @Column(name = "calendar_title")
     private String calendarTitle;
 
-    @Column
+    @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column
+    @Column(name = "end_data")
     private LocalDate endDate;
 
-    @Column
+    @Column(name = "calendar_target_code")
     private String calendarTargetCode;
 
-    @Column
+    @Column(name = "display_date")
     private String displayDate;
 
     @OneToMany(mappedBy = "calendarId") // TargetMonthEntity에서 연결된 필드명 입력(calendarId)

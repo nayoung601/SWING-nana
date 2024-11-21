@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "family")  // 테이블 이름 설정
 public class FamilyEntity {
     @Id
+    @Column(name = "family_id")
     private String familyId; // 가족 고유 아이디 (PK)
 
     @Column(name = "family_create_date")

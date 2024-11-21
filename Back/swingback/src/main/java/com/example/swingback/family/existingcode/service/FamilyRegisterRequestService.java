@@ -8,6 +8,9 @@ import com.example.swingback.family.existingcode.dto.FamilyRegisterRequestDTO;
 import com.example.swingback.family.existingcode.dto.FamilyRegisterResponseDTO;
 import com.example.swingback.family.newcode.entity.FamilyEntity;
 import com.example.swingback.family.newcode.repository.FamilyRepository;
+import com.example.swingback.notification.fcmtest.service.FCMService;
+import com.example.swingback.notification.message.dto.MessageTemplateDTO;
+import com.example.swingback.notification.message.service.MessageTemplateService;
 import com.example.swingback.notification.token.entity.FCMTokenEntity;
 import com.example.swingback.notification.token.repository.FCMTokenRepository;
 import com.example.swingback.notification.total.service.TotalNotificationService;
@@ -31,6 +34,8 @@ public class FamilyRegisterRequestService {
     private final UserRepository userRepository;
     private final FCMTokenRepository fcmTokenRepository;
     private final TotalNotificationService totalNotificationService;
+    private final MessageTemplateService messageTemplateService;
+    private final FCMService fcmService;
 
     public void findFamilyIdAndRequest(FamilyRegisterRequestDTO familyRegisterRequestDTO) {
         //요청을 보내는 회원의 회원정보 가져오기
@@ -71,6 +76,24 @@ public class FamilyRegisterRequestService {
         Long messageTemplate = 1L;
         Map<String, String> name = Map.of("name", requestUserEntity.getName());
 
+//        totalNotificationService
+//                .saveNotification(NotificationType.FAMILY_REQUEST.getDescription(),
+//                        requestUserEntity.getUserId(),
+//                        responseUser,
+//                        false,
+//                        true,
+//                        new Date(),
+//                        new Date(),
+//                        messageTemplate,
+//                        name,
+//                        latestTokenEntity.getToken());
+
+                /*
+        알림보낼 메시지 템플릿을 불러옴
+        messageTemplate : 템플릿 번호
+        variables : 템플릿에 변수를 추가해서 변수를 어떻게 바꿔서 보여줄지 설정하는 부분
+         */
+        MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
         totalNotificationService
                 .saveNotification(NotificationType.FAMILY_REQUEST.getDescription(),
                         requestUserEntity.getUserId(),
@@ -78,11 +101,11 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
-                        messageTemplate,
-                        name,
-                        latestTokenEntity.getToken());
-
+                        null,
+                        messageTemplateDTO
+                        );
+        // FCM알림 전송
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
     }
 
     public void requestAccept(FamilyRegisterResponseDTO familyRegisterResponseDTO) {
@@ -119,7 +142,7 @@ public class FamilyRegisterRequestService {
         Map<String, String> name = Map.of("name", requestUserEntity.getName());
 
 
-
+        MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
         totalNotificationService
                 .saveNotification(NotificationType.FAMILY_APPROVED.getDescription(),
                         requestUserEntity.getUserId(),
@@ -127,10 +150,11 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
-                        messageTemplate,
-                        name,
-                        latestTokenEntity.getToken());
+                        null,
+                        messageTemplateDTO
+                        );
+        // FCM알림 전송
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
 
     }
 
@@ -166,7 +190,7 @@ public class FamilyRegisterRequestService {
         Long messageTemplate = 3L;
         Map<String, String> name = Map.of("name", requestIdEntity.getName());
 
-
+        MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
         totalNotificationService
                 .saveNotification(NotificationType.FAMILY_DENIED.getDescription(),
                         requestIdEntity.getUserId(),
@@ -174,10 +198,9 @@ public class FamilyRegisterRequestService {
                         false,
                         true,
                         new Date(),
-                        new Date(),
-                        messageTemplate,
-                        name,
-                        latestTokenEntity.getToken());
-
+                        null,
+                        messageTemplateDTO);
+        // FCM알림 전송
+//        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
     }
 }

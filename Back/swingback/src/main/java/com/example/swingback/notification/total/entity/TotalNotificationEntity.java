@@ -3,10 +3,7 @@ package com.example.swingback.notification.total.entity;
 
 import com.example.swingback.User.entity.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,6 +12,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "total_notification")
 public class TotalNotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +30,7 @@ public class TotalNotificationEntity {
 //    private Long responseId;
 
     @ManyToOne
-    @JoinColumn(name = "responseId") //알림 받는 사람 아이디
+    @JoinColumn(name = "response_id") //알림 받는 사람 아이디
     private UserEntity responseId;
 
     @Column(name = "request_id") // 요청 보낸사람 아이디
@@ -52,4 +50,8 @@ public class TotalNotificationEntity {
 
     @Column(name = "message") // 알림창에 띄워줄 알림 메시지
     private String message;
+
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
+    }
 }
