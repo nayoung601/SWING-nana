@@ -34,7 +34,7 @@ export default function RegisterOptions() {
           <View style={styles.card}>
             <Text style={styles.title}>처방전 스캔</Text>
             <Image
-              source={require('../../assets/images/medical-record.png')}
+              source={require('../../assets/images/medical-record(3).png')}
               style={styles.icon}
             />
             <Text style={styles.description}>처방전을 스캔하여 복약 정보를 등록하세요!</Text>

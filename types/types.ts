@@ -1,26 +1,17 @@
-// types.ts
+// Medicine 인터페이스 수정 (새로운 필드 정의)
+export interface Medicine {
+  medicineName: string; // 약물 이름
+  dosagePerIntake: number; // 1회 복용량
+  frequencyIntake: number; // 복용 횟수
+  durationIntake: number; // 복용 기간
+  morningTimebox: boolean; // 기본값 false
+  lunchTimebox: boolean; // 기본값 false
+  dinnerTimebox: boolean; // 기본값 false
+  beforeSleepTimebox: boolean; // 기본값 false
+}
 
-// 약물 위치 정보를 위한 Position 인터페이스 정의
-export interface Position {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }
-  
-  // Medicine 인터페이스 수정
-  export interface Medicine {
-    name: string;
-    dosage: string;
-    frequency: string;
-    duration: string;
-    position?: Position | null; // Position 타입 사용
-  }
-  
-  // PrescriptionInfo 인터페이스 수정
-  export interface PrescriptionInfo {
-    prescription_date: string;
-    datePosition?: Position | null; // datePosition 속성 추가
-    medicineList: Medicine[];       // Medicine 배열로 정의
-  }
-  
+// PrescriptionInfo 인터페이스 수정
+export interface PrescriptionInfo {
+  registrationDate: string; // 조제 날짜
+  medicineList: Medicine[]; // Medicine 배열로 정의
+}

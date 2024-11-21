@@ -5,6 +5,7 @@
     "strict": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "types" : ["expo-router"],
     "module": "es2020", // 또는 "esnext"
     "target": "es2017",
     "baseUrl": "./",
