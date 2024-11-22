@@ -27,7 +27,7 @@ public class BuilderCalendar {
                                       LocalDate endDateMethod,
                                       String calendarTargetCodeMethod) {
 
-        LocalDate current = startDateMethod;
+        LocalDate current = startDateMethod; // 현재 날짜 받기
 
         while (!current.isAfter(endDateMethod)) {
             String yearMonth = YearMonth.from(current).toString();

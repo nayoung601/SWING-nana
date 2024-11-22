@@ -32,6 +32,9 @@ public class HealthcareEntity {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
     @Column(name = "measure_title")
     private String measureTitle; // 세부 항목 (아침, 점심 등)
 
