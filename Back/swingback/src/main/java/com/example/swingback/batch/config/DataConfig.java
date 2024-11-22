@@ -4,7 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,7 +24,9 @@ import java.util.HashMap;
                 "com.example.swingback.notification.message.repository",
                 "com.example.swingback.notification.token.repository",
                 "com.example.swingback.notification.total.repository",
-                "com.example.swingback.User.repository"
+                "com.example.swingback.User.repository",
+                "com.example.swingback.healthcare.healthinfo.repository"
+
         },
         entityManagerFactoryRef = "dataEntityManager",
         transactionManagerRef = "dataTransactionManager"
@@ -53,7 +54,8 @@ public class DataConfig {
                 "com.example.swingback.notification.message.entity",
                 "com.example.swingback.notification.token.entity",
                 "com.example.swingback.notification.total.entity",
-                "com.example.swingback.User.entity"
+                "com.example.swingback.User.entity",
+                "com.example.swingback.healthcare.healthinfo.entity"
         });
         em. setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
