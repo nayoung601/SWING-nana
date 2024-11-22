@@ -15,8 +15,8 @@ import java.util.List;
 public class TotalNotificationController {
 
     private final TotalNotificationService totalNotificationService;
-    @GetMapping("/api/notification/{userId}")
-    public ResponseEntity<?> getNotification(@PathVariable Long userId) {
+    @GetMapping("/api/notification")
+    public ResponseEntity<?> getNotification(@RequestParam Long userId) {
         List<NotificationTableDTO> list
                 = totalNotificationService.getNotificationTable(userId);
 
