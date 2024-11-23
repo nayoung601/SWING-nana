@@ -4,6 +4,7 @@ import com.example.swingback.User.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class HealthcareEntity {
 
     @Id
