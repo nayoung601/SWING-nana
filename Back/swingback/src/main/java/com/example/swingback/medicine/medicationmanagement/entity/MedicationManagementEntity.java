@@ -43,6 +43,9 @@ public class MedicationManagementEntity {
     @JsonManagedReference // 순환 참조 방지
     private List<IntakeMedicineListEntity> medicineList;
 
+    @Column(name = "type")
+    private String type;
+
     // 약 복용확인 위한 Setter 메서드 추가
     public void setIntakeConfirmed(boolean totalIntakeConfirmed) {
         this.totalIntakeConfirmed = totalIntakeConfirmed;

@@ -68,6 +68,7 @@ public class MedicineBagSservice {
                 .lunchTime(medicineBagDTO.getLunchTime())
                 .dinnerTime(medicineBagDTO.getDinnerTime())
                 .beforeSleepTime(medicineBagDTO.getBeforeSleepTime())
+                .type(medicineBagDTO.getType())
                 .build();
         // 요청한 사용자 ID가 유효한지 확인
         if (medicineBag == null) {
@@ -131,6 +132,7 @@ public class MedicineBagSservice {
                         .notificationTime(morningTime)
                         .totalIntakeConfirmed(false)
                         .medicineList(new ArrayList<>())
+                        .type(medicineBagDTO.getType())
                         .build();
                 for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
                     if (medicineDTO.getMorningTimebox()) {
@@ -171,6 +173,7 @@ public class MedicineBagSservice {
                         .notificationTime(lunchTime)
                         .totalIntakeConfirmed(false)
                         .medicineList(new ArrayList<>())
+                        .type(medicineBagDTO.getType())
                         .build();
                 for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
                     if (medicineDTO.getLunchTimebox()) {
@@ -191,7 +194,7 @@ public class MedicineBagSservice {
                 // LocalDateTime을 Date로 변환
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-                //아침약 복용리스트 등록
+                //점심약 복용리스트 등록
                 totalNotificationService
                         .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
                                 requestUserEntity.getUserId(),
@@ -213,6 +216,7 @@ public class MedicineBagSservice {
                         .notificationTime(dinnerTime)
                         .totalIntakeConfirmed(false)
                         .medicineList(new ArrayList<>())
+                        .type(medicineBagDTO.getType())
                         .build();
                 for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
                     if (medicineDTO.getDinnerTimebox()) {
@@ -232,7 +236,7 @@ public class MedicineBagSservice {
                 // LocalDateTime을 Date로 변환
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-                //아침약 복용리스트 등록
+                //저녁약 복용리스트 등록
                 totalNotificationService
                         .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
                                 requestUserEntity.getUserId(),
@@ -257,6 +261,7 @@ public class MedicineBagSservice {
                         .notificationTime(beforeSleepTime)
                         .totalIntakeConfirmed(false)
                         .medicineList(new ArrayList<>())
+                        .type(medicineBagDTO.getType())
                         .build();
                 for (MedicineInputDTO medicineDTO : medicineBagDTO.getMedicineList()) {
                     if (medicineDTO.getBeforeSleepTimebox()) {
@@ -276,7 +281,7 @@ public class MedicineBagSservice {
                 // LocalDateTime을 Date로 변환
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-                //아침약 복용리스트 등록
+                //자기전약 복용리스트 등록
                 totalNotificationService
                         .saveNotification(NotificationType.MEDICATION_REMINDER.getDescription(),
                                 requestUserEntity.getUserId(),
@@ -353,6 +358,7 @@ public class MedicineBagSservice {
                             .totalIntakeConfirmed(medicationManagementEntity.isTotalIntakeConfirmed())
                             .hidden(medicineBag.isHidden())
                             .medicineList(intakeMedicineListDTOs)
+                            .type(medicineBag.getType())
                             .build();
 
                     medicationManagementDTOS.add(addList);

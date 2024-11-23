@@ -25,4 +25,5 @@ public class MedicationManagementDTO {
     private boolean totalIntakeConfirmed; // 모두 복용 버튼 확인용
     private boolean hidden;// 가족에게 숨길지 여부
     private List<IntakeMedicineListDTO> medicineList;
+    private String type;
 }

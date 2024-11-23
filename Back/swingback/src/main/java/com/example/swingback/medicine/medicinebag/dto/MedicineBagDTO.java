@@ -22,4 +22,5 @@ public class MedicineBagDTO {
     private LocalDateTime lunchTime;
     private LocalDateTime dinnerTime;
     private LocalDateTime beforeSleepTime;
+    private String type;
 }

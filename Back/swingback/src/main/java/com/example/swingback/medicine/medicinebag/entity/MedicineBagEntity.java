@@ -71,4 +71,8 @@ public class MedicineBagEntity {
     @Column(name = "hidden")
     private boolean hidden;
 
+    @Column(name = "type")
+    private String type;
+
+
 }
