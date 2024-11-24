@@ -1,3 +1,4 @@
+// Medicine 인터페이스 수정 (새로운 필드 정의)
 export interface Medicine {
   medicineName: string; // 약물 이름
   dosagePerIntake: number; // 1회 복용량
@@ -13,5 +14,4 @@ export interface Medicine {
 export interface PrescriptionInfo {
   registrationDate: string; // 조제 날짜
   medicineList: Medicine[]; // Medicine 배열로 정의
-  //type : string;            // 의약품 & 영양제 구분 필드 추가
 }
