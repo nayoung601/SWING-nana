@@ -160,11 +160,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { useUserData } from '@/context/UserDataContext';
+import MedicationList from '@/components/MedicationList';
 import BloodPressure from '@/components/BloodPressure';
 import BloodSugar from '@/components/BloodSugar';
 import axios from 'axios';
 
-const HealthCalendar = ({ userId = 1 }) => {
+const HealthCalendar = ()  => {
+  const { user } = useUserData();
   const [selectedDate, setSelectedDate] = useState('');
   const [markedDates, setMarkedDates] = useState({});
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -175,13 +178,14 @@ const HealthCalendar = ({ userId = 1 }) => {
     const fetchData = async () => {
       try {
         const formattedDate = formatDate(currentDate);
-        const response = await axios.get(`http://localhost:8080/api/calendar/${userId}`, {
+        const response = await axios.get(`http://localhost:8080/api/calendar/${user.userId}`, {
           params: { date: formattedDate },
           withCredentials: true,
         });
 
         const fetchedData = response.data || [];
         const marks = {};
+
         fetchedData.forEach((item) => {
           item.target.forEach((target) => {
             marks[target.targetMonth] = {
@@ -198,7 +202,7 @@ const HealthCalendar = ({ userId = 1 }) => {
     };
 
     fetchData();
-  }, [userId, currentDate]);
+  }, [user.userId, currentDate]);
 
   const handleDayPress = (day) => {
     setSelectedDate(day.dateString);
@@ -231,12 +235,22 @@ const HealthCalendar = ({ userId = 1 }) => {
         }}
         enableSwipeMonths={true}
       />
-      {selectedDate && (
-        <>
-          <BloodPressure selectedDate={selectedDate} userId={userId} />
-          <BloodSugar selectedDate={selectedDate} userId={userId} />
-        </>
-      )}
+
+       {/* 복약 리스트 */}
+       {user && user.userId ? (
+                <MedicationList userId={user.userId} selectedDate={selectedDate} />
+            ) : (
+                <View >
+                    <Text>유저 정보를 불러오는 중입니다.</Text>
+                </View>
+            )}
+       {/* 혈압 및 혈당 컴포넌트 */}      
+       {selectedDate && (
+         <>
+           <BloodPressure selectedDate={selectedDate} userId={user.userId} />
+           <BloodSugar selectedDate={selectedDate} userId={user.userId} />
+         </>
+       )}
     </View>
   );
 };
