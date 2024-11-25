@@ -120,16 +120,32 @@ export default function SetAlarm() {
     localDate.setHours(localDate.getHours() + 9);
   
     // KST 시간을 ISO 문자열로 반환
-    return localDate.toISOString();
+    //return localDate.toISOString();
+
+      // KST 시간을 "YYYY-MM-DDTHH:mm:ss" 형식으로 변환
+    const formattedDate = `${localDate.getFullYear()}-${String(
+      localDate.getMonth() + 1
+    ).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}T${String(
+      localDate.getHours()
+    ).padStart(2, '0')}:${String(localDate.getMinutes()).padStart(2, '0')}:${String(
+      localDate.getSeconds()
+    ).padStart(2, '0')}`;
+
+    return formattedDate;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const validationErrors = [];
 
+    // 약물 리스트 유효성 검사
     editableMedicineList.forEach((medicine) => {
       const selectedCheckboxCount = ['morning', 'lunch', 'dinner', 'beforeSleep']
         .filter((time) => medicine[`${time}Timebox`])
         .length;
+
+      if (!medicineBagTitle.trim()) {
+        validationErrors.push('약봉투 이름을 입력해주세요.');
+      }
 
       if (selectedCheckboxCount !== medicine.frequencyIntake) {
         validationErrors.push(
@@ -184,31 +200,69 @@ export default function SetAlarm() {
       registrationDate,
       endDate: formattedEndDate, // '2024-10-07',
       medicineBagTitle,
-      hidden: hidden === true, // hidden=true → 비공개
+      //hidden: hidden === true, // hidden=true → 비공개
+      hidden: !!hidden, // 명시적으로 boolean 값 전달
       morningTime: formatDateTime(alarmTimes.morning, registrationDate),
       lunchTime: formatDateTime(alarmTimes.lunch, registrationDate),
       dinnerTime: formatDateTime(alarmTimes.dinner, registrationDate),
       beforeSleepTime: formatDateTime(alarmTimes.beforeSleep, registrationDate),
+      type: "M", // 스캔방식 -> "M" 값 추가
       medicineList: editableMedicineList,
     };
 
     console.log('등록된 데이터:', payload);
+    console.log("Payload JSON String:", JSON.stringify(payload)); // 디버깅용 코드
 
-    if (Platform.OS === 'web') {
-      window.alert('알림 세부 설정이 저장되었습니다.');
-      router.push('../(main)/medication'); // 웹 환경에서 바로 이동
-    } else {
-      Alert.alert(
-        '알림',
-        '알림 세부 설정이 저장되었습니다.',
-        [
-          {
-            text: '확인',
-            onPress: () => router.push('../(main)/medication'), // 등록 완료 메시지 확인 후 -> 복약관리 탭으로 이동
-          },
-        ],
-        { cancelable: false }
-      );
+
+    try {
+      // API 요청 보내기
+      const response = await fetch('http://localhost:8080/api/medicine', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      // 서버 응답 처리
+      const responseText = await response.text(); // 응답을 텍스트로 먼저 가져옴
+      console.log("Response Text:", responseText); // 서버에서 반환된 데이터 확인
+  
+      if (response.ok) {
+        // JSON 형식인지 확인 후 파싱
+        let result;
+        try {
+          result = JSON.parse(responseText); // JSON 파싱 시도
+        } catch (e) {
+          result = responseText; // JSON 파싱 실패 시 텍스트 그대로 사용
+        }
+  
+        console.log('데이터 전송 성공:', result);
+  
+        // 성공 메시지
+        if (Platform.OS === 'web') {
+          window.alert(result || '데이터 전송이 성공적으로 완료되었습니다.');
+        } else {
+          Alert.alert('알림', result || '데이터 전송이 성공적으로 완료되었습니다.', [
+            {
+              text: '확인',
+              onPress: () => router.push('/(main)/medication'),
+            },
+          ]);
+        }
+      } else {
+        throw new Error(`HTTP 오류: ${responseText}`);
+      }
+    } catch (error) {
+      console.error('데이터 전송 실패:', error);
+  
+      // 실패 메시지
+      if (Platform.OS === 'web') {
+        window.alert(`데이터 전송 실패: ${error.message}`);
+      } else {
+        Alert.alert('오류', `데이터 전송 실패: ${error.message}`);
+      }
     }
   };
 
