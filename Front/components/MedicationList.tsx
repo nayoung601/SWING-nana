@@ -264,8 +264,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     medicationImage: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         marginBottom: 5,
         borderRadius: 5,
         resizeMode: 'contain',

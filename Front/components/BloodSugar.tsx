@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import axios from 'axios';
 
 export default function BloodSugar({ selectedDate, userId }) {
-  const [bloodSugar, setBloodSugar] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [bloodSugar, setBloodSugar] = useState([]); // 혈당 데이터 상태
+  const [loading, setLoading] = useState(false); // 로딩 상태
 
   useEffect(() => {
     const fetchBloodSugar = async () => {
-      if (!selectedDate || !userId) return;
-      setLoading(true);
+      if (!selectedDate || !userId) {
+        setBloodSugar([]); // 날짜나 유저 ID가 없을 경우 초기화
+        return;
+      }
+
+      setLoading(true); // 로딩 시작
+      setBloodSugar([]); // 기존 데이터 초기화
 
       try {
-        const params = { date: selectedDate }; // 요청에 보낼 params
-        console.log('보내는 데이터 (params):', params);
-
         const response = await axios.get(`http://localhost:8080/api/calendar/day/${userId}`, {
-          params, // params 전달
+          params: { date: selectedDate },
           withCredentials: true,
         });
 
-        console.log('혈당 응답 데이터:', response.data);
-
-        // bloodsugar 데이터만 필터링
         const bloodSugarData = response.data.find((item) => item.type === 'bloodsugar');
-        if (bloodSugarData && Array.isArray(bloodSugarData.measurements)) {
-          setBloodSugar(bloodSugarData.measurements);
-        } else {
-          setBloodSugar([]);
-        }
+        setBloodSugar(bloodSugarData?.measurements || []); // 데이터가 없으면 빈 배열 설정
       } catch (error) {
         console.error('혈당 데이터 가져오기 실패:', error.message);
+        setBloodSugar([]); // 에러 발생 시 상태 초기화
       } finally {
-        setLoading(false);
+        setLoading(false); // 로딩 종료
       }
     };
 
@@ -46,6 +42,7 @@ export default function BloodSugar({ selectedDate, userId }) {
       </View>
       {loading ? (
         <View style={styles.contentContainer}>
+          <ActivityIndicator size="large" color="#7686DB" />
           <Text style={styles.loadingText}>데이터를 불러오는 중입니다...</Text>
         </View>
       ) : bloodSugar.length > 0 ? (
@@ -102,7 +99,6 @@ const styles = StyleSheet.create({
   },
   measurementValue: {
     fontSize: 16,
-    color: '#333',
   },
   measurementDate: {
     fontSize: 14,
