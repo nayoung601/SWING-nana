@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Image } from 'react-native';
 
 const MedicationManagement = ({ userId, selectedDate }) => {
     const [medicationData, setMedicationData] = useState([]);
@@ -7,7 +7,7 @@ const MedicationManagement = ({ userId, selectedDate }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!userId || !selectedDate) return; // userId 또는 selectedDate가 없는 경우 중단
+            if (!userId || !selectedDate) return;
 
             try {
                 const response = await fetch(
@@ -24,14 +24,14 @@ const MedicationManagement = ({ userId, selectedDate }) => {
                 setMedicationData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setMedicationData([]); // 데이터 없을 때 빈 배열 설정
+                setMedicationData([]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, [userId, selectedDate]); // userId 또는 selectedDate가 변경될 때마다 API 호출
+    }, [userId, selectedDate]);
 
     const handleIntakeConfirmation = async (intakeMedicineListId, currentStatus) => {
         try {
@@ -107,9 +107,21 @@ const MedicationManagement = ({ userId, selectedDate }) => {
                     <View key={index} style={styles.card}>
                         <View style={styles.header}>
                             <Text style={styles.time}>{medication.notificationTime}</Text>
-                            <Text style={styles.title}>{medication.medicineBagName}</Text>
+
+                            <View style={styles.titleContainer}>
+                                {/* 타입에 따른 이미지 표시 */}
+                                <Image
+                                    source={
+                                        medication.type === 'M'
+                                            ? require('../assets/images/prescriptionDrug.png')
+                                            : require('../assets/images/supplements.png')
+                                    }
+                                    style={styles.icon}
+                                />
+                                <Text style={styles.title}>{medication.medicineBagName}</Text>
+                            </View>
                             <Text style={styles.duration}>
-                                {medication.notificationDate} (n일간)
+                                {medication.notificationDate}
                             </Text>
                         </View>
                         <View style={styles.medicineList}>
@@ -156,7 +168,7 @@ const MedicationManagement = ({ userId, selectedDate }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: '#F0F4FF',
     },
     loadingContainer: {
         flex: 1,
@@ -175,6 +187,17 @@ const styles = StyleSheet.create({
     },
     header: {
         marginBottom: 10,
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
     },
     time: {
         fontSize: 16,
