@@ -15,7 +15,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useUserData } from '../../context/UserDataContext';
 
 export default function SetAlarm() {
-  const router = useRouter();  // router 초기화
+  const router = useRouter(); // router 초기화
   const { user } = useUserData(); // 컨텍스트에서 user 가져오기
 
   const params = useLocalSearchParams();
@@ -106,8 +106,7 @@ export default function SetAlarm() {
 
   const formatDateTime = (date: Date, registrationDate: string) => {
     const [year, month, day] = registrationDate.split('-');
-    
-    // 새로운 Date 객체 생성
+
     const localDate = new Date(
       parseInt(year, 10),
       parseInt(month, 10) - 1,
@@ -115,14 +114,7 @@ export default function SetAlarm() {
       date.getHours(),
       date.getMinutes()
     );
-  
-    // +9시간 추가하여 KST로 변환
-    localDate.setHours(localDate.getHours() + 9);
-  
-    // KST 시간을 ISO 문자열로 반환
-    //return localDate.toISOString();
 
-      // KST 시간을 "YYYY-MM-DDTHH:mm:ss" 형식으로 변환
     const formattedDate = `${localDate.getFullYear()}-${String(
       localDate.getMonth() + 1
     ).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}T${String(
@@ -137,7 +129,6 @@ export default function SetAlarm() {
   const handleRegister = async () => {
     const validationErrors = [];
 
-    // 약물 리스트 유효성 검사
     editableMedicineList.forEach((medicine) => {
       const selectedCheckboxCount = ['morning', 'lunch', 'dinner', 'beforeSleep']
         .filter((time) => medicine[`${time}Timebox`])
@@ -168,52 +159,37 @@ export default function SetAlarm() {
       return;
     }
 
-    // durationIntake 최대값 계산
     const maxDurationIntake = Math.max(
       ...editableMedicineList.map((medicine) => medicine.durationIntake || 0)
     );
 
-    console.log('Max Duration Intake:', maxDurationIntake); // 디버깅용 로그
-
-    // endDate 계산
     const [year, month, day] = registrationDate.split('-').map(Number);
-    console.log('Parsed Date:', { year, month, day });  // 디버깅용 로그
-
     const calculatedEndDate = new Date(year, month - 1, day);
     calculatedEndDate.setDate(calculatedEndDate.getDate() + maxDurationIntake - 1);
 
-    console.log('Calculated End Date (Raw):', calculatedEndDate); // 디버깅용 로그
-
-
-    // 연, 월, 일을 직접 추출하여 포맷팅
     const formattedEndDate = `${calculatedEndDate.getFullYear()}-${String(
       calculatedEndDate.getMonth() + 1
     ).padStart(2, '0')}-${String(calculatedEndDate.getDate()).padStart(2, '0')}`;
-    
-    console.log('Formatted End Date:', formattedEndDate); // 디버깅용 로그
 
-
+    const selectedAlarms = Array.from(selectedTimes).reduce((acc, timeKey) => {
+      acc[`${timeKey}Time`] = formatDateTime(alarmTimes[timeKey], registrationDate);
+      return acc;
+    }, {});
 
     const payload = {
-      //userId: 2,
       userId: user?.userId,
       registrationDate,
-      endDate: formattedEndDate, // '2024-10-07',
+      endDate: formattedEndDate,
       medicineBagTitle,
-      //hidden: hidden === true, // hidden=true → 비공개
-      hidden: !!hidden, // 명시적으로 boolean 값 전달
-      morningTime: formatDateTime(alarmTimes.morning, registrationDate),
-      lunchTime: formatDateTime(alarmTimes.lunch, registrationDate),
-      dinnerTime: formatDateTime(alarmTimes.dinner, registrationDate),
-      beforeSleepTime: formatDateTime(alarmTimes.beforeSleep, registrationDate),
-      type: "M", // 스캔방식 -> "M" 값 추가
+      hidden: !!hidden,
+      type: 'M',
       medicineList: editableMedicineList,
+      ...selectedAlarms,
     };
 
     console.log('등록된 데이터:', payload);
 
     try {
-      // API 요청 보내기
       const response = await fetch('http://localhost:8080/api/medicine', {
         method: 'POST',
         credentials: 'include',
@@ -222,29 +198,16 @@ export default function SetAlarm() {
         },
         body: JSON.stringify(payload),
       });
-  
-      // 서버 응답 처리
-      const responseText = await response.text(); // 응답을 텍스트로 먼저 가져옴
-      console.log("Response Text:", responseText); // 서버에서 반환된 데이터 확인
-  
-      if (response.ok) {
-        // JSON 형식인지 확인 후 파싱
-        let result;
-        try {
-          result = JSON.parse(responseText); // JSON 파싱 시도
-        } catch (e) {
-          result = responseText; // JSON 파싱 실패 시 텍스트 그대로 사용
-        }
-  
-        console.log('데이터 전송 성공:', result);
-  
-        // 성공 메시지
-        if (Platform.OS === 'web') {
-          window.alert(result || '데이터 전송이 성공적으로 완료되었습니다.');
-          router.push('/(main)/medication'); // 웹 환경에서 바로 이동
 
+      const responseText = await response.text();
+      console.log('Response Text:', responseText);
+
+      if (response.ok) {
+        if (Platform.OS === 'web') {
+          window.alert(responseText || '데이터 전송이 성공적으로 완료되었습니다.');
+          router.push('/(main)/medication');
         } else {
-          Alert.alert('알림', result || '데이터 전송이 성공적으로 완료되었습니다.', [
+          Alert.alert('알림', responseText || '데이터 전송이 성공적으로 완료되었습니다.', [
             {
               text: '확인',
               onPress: () => router.push('/(main)/medication'),
@@ -256,8 +219,7 @@ export default function SetAlarm() {
       }
     } catch (error) {
       console.error('데이터 전송 실패:', error);
-  
-      // 실패 메시지
+
       if (Platform.OS === 'web') {
         window.alert(`데이터 전송 실패: ${error.message}`);
       } else {
@@ -274,7 +236,6 @@ export default function SetAlarm() {
           복용 횟수 별 알림 시간 및 연동 가족 여부를 설정하세요!
         </Text>
 
-        {/* 약봉투 이름 */}
         <View style={styles.medicineBagContainer}>
           <Text style={styles.label}>약봉투 이름</Text>
           <TextInput
@@ -285,7 +246,6 @@ export default function SetAlarm() {
           />
         </View>
 
-        {/* 약 리스트 */}
         {editableMedicineList.map((medicine, index) => (
           <View key={index} style={styles.medicineItem}>
             <Text style={styles.medicineTitle}>
@@ -324,7 +284,6 @@ export default function SetAlarm() {
           </View>
         ))}
 
-        {/* 연동 가족 공개 여부 */}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>연동 가족 공개 여부</Text>
           <View style={styles.toggleButtons}>
@@ -357,7 +316,6 @@ export default function SetAlarm() {
           </View>
         </View>
 
-        {/* 알림 시간 */}
         <View style={styles.alarmTimeContainer}>
           <Text style={styles.label}>알림 시간</Text>
           {Array.from(selectedTimes)
