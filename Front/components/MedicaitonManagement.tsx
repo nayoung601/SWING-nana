@@ -11,7 +11,7 @@ const MedicationManagement = ({ userId, selectedDate }) => {
 
             try {
                 const response = await fetch(
-                    `http://172.30.1.3:8080/api/medicine/${userId}?date=${selectedDate}`,
+                    `http://localhost:8080/api/medicine/${userId}?date=${selectedDate}`,
                     {
                         method: 'GET',
                         credentials: 'include',
@@ -36,7 +36,7 @@ const MedicationManagement = ({ userId, selectedDate }) => {
     const handleIntakeConfirmation = async (intakeMedicineListId, currentStatus) => {
         try {
             const response = await fetch(
-                `http://172.30.1.3:8080/api/medicine/intake?intakeMedicineListId=${intakeMedicineListId}&intakeConfirmed=${!currentStatus}`,
+                `http://localhost:8080/api/medicine/intake?intakeMedicineListId=${intakeMedicineListId}&intakeConfirmed=${!currentStatus}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -63,7 +63,7 @@ const MedicationManagement = ({ userId, selectedDate }) => {
     const handleAllIntakeConfirmation = async (medicationManagementId) => {
         try {
             const response = await fetch(
-                `http://172.30.1.3:8080/api/medicine/intake/all?medicationManagementId=${medicationManagementId}`,
+                `http://localhost:8080/api/medicine/intake/all?medicationManagementId=${medicationManagementId}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
