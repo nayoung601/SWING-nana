@@ -4,7 +4,10 @@ import com.example.swingback.chat.dto.ChatMessage;
 import com.example.swingback.chat.dto.ChatRoom;
 import com.example.swingback.chat.entity.ChatMessageEntity;
 import com.example.swingback.chat.service.ChatService;
+import com.example.swingback.error.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +45,9 @@ public class ChatController {
     public List<ChatMessage> getMessages(@PathVariable String roomId) {
         return chatService.getMessagesByRoomId(roomId);
     }
-
+    @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
+    public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 
 }
