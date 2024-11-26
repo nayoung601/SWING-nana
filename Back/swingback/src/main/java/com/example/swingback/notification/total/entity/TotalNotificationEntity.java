@@ -5,6 +5,7 @@ import com.example.swingback.User.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -37,10 +38,10 @@ public class TotalNotificationEntity {
     private Long requestId;
 
     @Column(name = "send_time") // 알림을 보낸 시간
-    private Date sendTime;
+    private LocalDateTime sendTime;
 
     @Column(name = "scheduled_time") // 예정된 알림 시간
-    private Date scheduledTime;
+    private LocalDateTime scheduledTime;
 
     @Column(name = "is_read") // 읽음 여부 표시
     private boolean isRead;
@@ -51,7 +52,7 @@ public class TotalNotificationEntity {
     @Column(name = "message") // 알림창에 띄워줄 알림 메시지
     private String message;
 
-    public void setSendTime(Date sendTime) {
+    public void setSendTime(LocalDateTime sendTime) {
         this.sendTime = sendTime;
     }
 }

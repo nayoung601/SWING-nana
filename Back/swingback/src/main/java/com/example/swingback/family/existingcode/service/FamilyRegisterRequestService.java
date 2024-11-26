@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -93,6 +94,7 @@ public class FamilyRegisterRequestService {
         messageTemplate : 템플릿 번호
         variables : 템플릿에 변수를 추가해서 변수를 어떻게 바꿔서 보여줄지 설정하는 부분
          */
+        LocalDateTime now = LocalDateTime.now();
         MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
         totalNotificationService
                 .saveNotification(NotificationType.FAMILY_REQUEST.getDescription(),
@@ -100,7 +102,7 @@ public class FamilyRegisterRequestService {
                         responseUser,
                         false,
                         true,
-                        new Date(),
+                        now,
                         null,
                         messageTemplateDTO
                         );
@@ -141,7 +143,7 @@ public class FamilyRegisterRequestService {
         Long messageTemplate = 2L;
         Map<String, String> name = Map.of("name", requestUserEntity.getName());
 
-
+        LocalDateTime now = LocalDateTime.now();
         MessageTemplateDTO messageTemplateDTO = messageTemplateService.generateMessage(messageTemplate, name);
         totalNotificationService
                 .saveNotification(NotificationType.FAMILY_APPROVED.getDescription(),
@@ -149,7 +151,7 @@ public class FamilyRegisterRequestService {
                         responseId,
                         false,
                         true,
-                        new Date(),
+                        now,
                         null,
                         messageTemplateDTO
                         );
@@ -185,7 +187,7 @@ public class FamilyRegisterRequestService {
         }
         //--------여기까지 함수로 만들어서 사용하는 리팩토링 해야할듯
 
-
+        LocalDateTime now = LocalDateTime.now();
         //메시지 템플릿
         Long messageTemplate = 3L;
         Map<String, String> name = Map.of("name", requestIdEntity.getName());
@@ -197,7 +199,7 @@ public class FamilyRegisterRequestService {
                         responseIdEntity,
                         false,
                         true,
-                        new Date(),
+                        now,
                         null,
                         messageTemplateDTO);
         // FCM알림 전송

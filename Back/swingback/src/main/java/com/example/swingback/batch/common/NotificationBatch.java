@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -79,17 +80,23 @@ public class NotificationBatch {
         return item -> {
 
             // 이미 처리된 항목이면 건너뜁니다.
-            if (item.getSendTime()!=null) {
+            if (item.getSendTime() != null) {
                 log.info("Notification already processed for notificationId: {}", item.getNotificationId());
                 return null; // null을 반환하면 Spring Batch에서 해당 항목을 무시합니다.
             }
-            if (item.getScheduledTime().compareTo(new Date()) <= 0) {
+
+            // 현재 시간을 LocalDateTime으로 가져오기
+            LocalDateTime now = LocalDateTime.now();
+
+            // item의 ScheduledTime이 LocalDateTime이라고 가정
+            if (item.getScheduledTime().isBefore(now) || item.getScheduledTime().isEqual(now)) {
                 List<FCMTokenEntity> allByUserId =
                         fcmTokenRepository.findAllByUserId(item.getResponseId());
                 // 가장 최근의 recentUseDate가 있는 FCMTokenEntity 가져오기
                 FCMTokenEntity latestTokenEntity = allByUserId.stream()
                         .max(Comparator.comparing(FCMTokenEntity::getRecentUseDate))
                         .orElse(null); // 리스트가 비어있을 경우 null 반환
+
                 // 복용 확인 상태가 false일 경우에만 알림을 전송
                 if (latestTokenEntity != null) {
                     fcmService.sendNotification(
@@ -99,13 +106,15 @@ public class NotificationBatch {
                 } else {
                     log.warn("No valid FCM token found for userId: {}", item.getResponseId());
                 }
-                item.setSendTime(new Date());
-            }
 
+                // SendTime을 현재 시간으로 설정
+                item.setSendTime(LocalDateTime.now());
+            }
 
             return item; // 엔티티를 그대로 반환
         };
     }
+
 
     @Bean
     public RepositoryItemWriter<TotalNotificationEntity> medicationWriter() {

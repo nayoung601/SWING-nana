@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,8 +44,8 @@ public class TotalNotificationService {
                                     UserEntity responseId,
                                     Boolean read,
                                     Boolean hidden,
-                                    Date scheduledTime,
-                                    Date sendTime,
+                                    LocalDateTime scheduledTime,
+                                    LocalDateTime sendTime,
                                     MessageTemplateDTO messageTemplateDTO
                                     ) {
 //        /*
@@ -73,11 +74,10 @@ public class TotalNotificationService {
 
     }
 
-
     public List<NotificationTableDTO> getNotificationTable(Long userId) {
-        // 로그인한 회원의 userid를 이용해 UserEntity 가져옴
+        // 로그인한 회원의 userId를 이용해 UserEntity 가져옴
         UserEntity byUserId = userRepository.findByUserId(userId);
-        if (byUserId==null) {
+        if (byUserId == null) {
             throw new CustomException("알림이 존재하지 않습니다.");
         }
 
@@ -85,20 +85,20 @@ public class TotalNotificationService {
         // sendTime을 기준으로 가장 최근 순으로 상위 10개를 가져오는 메서드 이용함
         List<TotalNotificationEntity> notificationEntityList
                 = notificationRepository.findTop10ByResponseIdOrderBySendTimeDesc(byUserId);
-//        for (TotalNotificationEntity totalNotificationEntity : notificationEntityList) {
-//            log.info("NotificationId : {}",totalNotificationEntity.getNotificationId());
-//            log.info("ScheduledTime : {}",totalNotificationEntity.getScheduledTime());
-//            log.info("SendTime : {}",totalNotificationEntity.getSendTime());
-//        }
+
         if (notificationEntityList.isEmpty()) {
             throw new CustomException("알림이 존재하지 않습니다.");
         }
 
-        //알림 10개의 리스트를 NotificationTableDTO List로 저장함
-        //예정된 알림시간을 넘어간 경우에만 알림페이지에 보여지도록 수정
+        // 현재 시간을 LocalDateTime으로 가져오기
+        LocalDateTime now = LocalDateTime.now();
+
+        // 알림 10개의 리스트를 NotificationTableDTO List로 저장함
+        // 예정된 알림시간을 넘어간 경우에만 알림페이지에 보여지도록 수정
         List<NotificationTableDTO> notification = notificationEntityList.stream()
                 .map(entity -> {
-                    if (entity.getScheduledTime().compareTo(new Date()) <= 0) {
+                    // ScheduledTime이 LocalDateTime이라고 가정
+                    if (entity.getScheduledTime().isBefore(now) || entity.getScheduledTime().isEqual(now)) {
                         NotificationTableDTO dto = new NotificationTableDTO();
                         dto.setNotificationId(entity.getNotificationId());
                         dto.setType(entity.getType());       // 알림 타입 설정
@@ -111,11 +111,10 @@ public class TotalNotificationService {
                 })
                 .filter(Objects::nonNull) // null 제거
                 .toList();
-//        for (NotificationTableDTO notificationTableDTO : notification) {
-//            log.info("NotificationId : {}",notificationTableDTO.getNotificationId());
-//        }
+
         return notification;
     }
+
 
 
 }

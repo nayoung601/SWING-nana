@@ -152,8 +152,8 @@ public class MedicineBagSservice {
                     medicineBag.getMedicationManagementEntities().add(morning);
 
                     LocalDateTime localDateTime = LocalDateTime.of(currentDate, morningTime);
-                    // LocalDateTime을 Date로 변환
-                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//                    // LocalDateTime을 Date로 변환
+//                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
                     //아침약 복용리스트 등록
                     totalNotificationService
@@ -162,7 +162,7 @@ public class MedicineBagSservice {
                                     requestUserEntity,
                                     false,
                                     medicineBagDTO.getHidden(),
-                                    date,
+                                    localDateTime,
                                     null,
                                     messageTemplateDTO
                             );
@@ -199,8 +199,6 @@ public class MedicineBagSservice {
                     medicineBag.getMedicationManagementEntities().add(lunch);
 
                     LocalDateTime localDateTime = LocalDateTime.of(currentDate, lunchTime);
-                    // LocalDateTime을 Date로 변환
-                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
                     //점심약 복용리스트 등록
                     totalNotificationService
@@ -209,7 +207,7 @@ public class MedicineBagSservice {
                                     requestUserEntity,
                                     false,
                                     medicineBagDTO.getHidden(),
-                                    date,
+                                    localDateTime,
                                     null,
                                     messageTemplateDTO
                             );
@@ -246,8 +244,6 @@ public class MedicineBagSservice {
                     medicineBag.getMedicationManagementEntities().add(dinner);
 
                     LocalDateTime localDateTime = LocalDateTime.of(currentDate, dinnerTime);
-                    // LocalDateTime을 Date로 변환
-                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
                     //저녁약 복용리스트 등록
                     totalNotificationService
@@ -256,7 +252,7 @@ public class MedicineBagSservice {
                                     requestUserEntity,
                                     false,
                                     medicineBagDTO.getHidden(),
-                                    date,
+                                    localDateTime,
                                     null,
                                     messageTemplateDTO
                             );
@@ -295,8 +291,6 @@ public class MedicineBagSservice {
                     medicineBag.getMedicationManagementEntities().add(beforeSleep);
 
                     LocalDateTime localDateTime = LocalDateTime.of(currentDate, beforeSleepTime);
-                    // LocalDateTime을 Date로 변환
-                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
                     //자기전약 복용리스트 등록
                     totalNotificationService
@@ -305,7 +299,7 @@ public class MedicineBagSservice {
                                     requestUserEntity,
                                     false,
                                     medicineBagDTO.getHidden(),
-                                    date,
+                                    localDateTime,
                                     null,
                                     messageTemplateDTO
                             );
