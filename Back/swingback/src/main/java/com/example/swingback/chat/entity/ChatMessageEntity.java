@@ -21,8 +21,8 @@ public class ChatMessageEntity {
     @Column(name = "chat_message_id")
     private Long chatMessageId;
 
-    @Column(name = "room_id")
-    private String roomId; // 채팅방 ID
+//    @Column(name = "room_id")
+//    private String roomId; // 채팅방 ID
     @Column(name = "sender")
     private String sender; // 보낸 사람
     @Column(name = "message")
@@ -30,5 +30,11 @@ public class ChatMessageEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private MessageType type; // 메시지 타입 (CHAT, JOIN, LEAVE)
+    private MessageType type; // 메시지 타입 (ENTER, TALK, LEAVE)
+
+    @ManyToOne
+    @JoinColumn(name = "room_id") // 기본키가 아닌 필드를 외래키로 지정할 때 설정
+    private ChatRoomEntity chatRoomId; // 채팅방 참조
+
+
 }

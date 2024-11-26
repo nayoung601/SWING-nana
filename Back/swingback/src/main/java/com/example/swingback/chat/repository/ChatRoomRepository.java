@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CahtRoomRepository extends JpaRepository<ChatRoomEntity,String> {
+public interface ChatRoomRepository extends JpaRepository<ChatRoomEntity,String> {
+    boolean existsByRoomId(String room_id);
 
 }

@@ -25,14 +25,23 @@ public class ChatController {
         return chatService.sendMessage(message);
     }
 
+//    @PostMapping("/rooms")
+//    public ChatRoom createRoom(@RequestParam Long userId) {
+//        return chatService.createRoom(userId);
+//    }
+//
+//    @GetMapping("/rooms")
+//    public ChatRoom findAllRoom(@RequestParam Long userId) {
+//        return chatService.findRoomById(userId);
+//    }
     @PostMapping("/rooms")
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatService.createRoom(name);
+    public ChatRoom getOrCreateRoom(@RequestParam Long userId) {
+        return chatService.getOrCreateRoom(userId);
+    }
+    @GetMapping("/rooms/{roomId}/messages")
+    public List<ChatMessage> getMessages(@PathVariable String roomId) {
+        return chatService.getMessagesByRoomId(roomId);
     }
 
-    @GetMapping("/rooms")
-    public List<ChatRoom> findAllRoom() {
-        return chatService.findAllRoom();
-    }
 
 }
