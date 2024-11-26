@@ -49,6 +49,7 @@ public class NotificationBatch {
         log.info("notificationJob");
         return new JobBuilder("notificationJob", jobRepository)
                 .start(notificationStep())
+                .preventRestart() // Job 중복 실행 방지
                 .build();
     }
 
