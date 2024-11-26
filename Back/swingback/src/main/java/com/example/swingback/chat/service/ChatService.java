@@ -138,6 +138,9 @@ public class ChatService {
         // userId를 기반으로 familyId 조회
         UserEntity user = userRepository.findByUserId(userId);
         String familyId = user.getFamily().getFamilyId();
+        if (familyId == null) {
+            throw new CustomException("가족 가입이 되어있지 않습니다 , 가족을 생성한 후 다시 시도해주세요");
+        }
 
         // 가족 채팅방이 이미 존재하는 경우 반환
         if (chatRoomRepository.existsByRoomId(familyId)) {
