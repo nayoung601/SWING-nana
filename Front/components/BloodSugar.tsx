@@ -51,7 +51,7 @@ export default function BloodSugar({ selectedDate, userId }) {
             <View key={index} style={styles.measurementContainer}>
               <Text style={styles.measurementTitle}>{bs.measureTitle}</Text>
               <Text style={styles.measurementValue}>{bs.bloodsugar} mg/dL</Text>
-              <Text style={styles.measurementDate}>{bs.registrationDate}</Text>
+              {/* <Text style={styles.measurementDate}>{bs.registrationDate}</Text> */}
             </View>
           ))}
         </View>

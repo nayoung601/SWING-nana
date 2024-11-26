@@ -53,7 +53,7 @@ export default function BloodPressure({ selectedDate, userId }) {
               <Text style={styles.measurementValue}>
                 {bp.highpressure}/{bp.lowpressure} mmHg
               </Text>
-              <Text style={styles.measurementDate}>{bp.registrationDate}</Text>
+              {/* <Text style={styles.measurementDate}>{bp.registrationDate}</Text> */}
             </View>
           ))}
         </View>
