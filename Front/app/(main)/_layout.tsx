@@ -140,6 +140,12 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="notification"
+          options={{
+            href: null, 
+          }}
+        />
       </Tabs>
     </SafeAreaView>
   );
