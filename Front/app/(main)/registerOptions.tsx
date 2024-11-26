@@ -71,16 +71,30 @@ export default function RegisterOptions() {
             </View>
           </View>
 
-          {/* 새로 추가된 혈압/혈당 등록 카드 */}
+          {/*  혈압/혈당 등록  */}
           <View style={styles.row}>
             <View style={styles.card}>
               <Text style={styles.title}>혈압/혈당 등록</Text>
               <Image
-                source={require('../../assets/images/blood-pressure.png')} // 적절한 아이콘 경로 설정
+                source={require('../../assets/images/blood-pressure.png')} 
                 style={styles.icon}
               />
               <Text style={styles.description}>혈압과 혈당 정보를 입력하고 등록하세요!</Text>
               <TouchableOpacity style={styles.button} onPress={() => router.push('../utils/Blood')}>
+                <Text style={styles.buttonText}>등록하기</Text>
+              </TouchableOpacity>
+            </View>
+
+          {/* 스케줄 메모 */}
+      
+            <View style={styles.card}>
+              <Text style={styles.title}>스케줄 등록</Text>
+              <Image
+                source={require('../../assets/images/notes.png')} 
+                style={styles.icon}
+              />
+              <Text style={styles.description}>간단한 일정과 메모를 등록하세요!</Text>
+              <TouchableOpacity style={styles.button} onPress={() => router.push('../utils/Schedule')}>
                 <Text style={styles.buttonText}>등록하기</Text>
               </TouchableOpacity>
             </View>
