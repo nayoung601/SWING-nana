@@ -8,14 +8,20 @@ import { useFamilyContext } from '@/context/FamilyContext';
 import { useRouter } from 'expo-router';
 import { fetchFamilyMembers } from '@/api/familyApi'; // API 호출 함수
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 설정
+import weekday from 'dayjs/plugin/weekday';
+import isToday from 'dayjs/plugin/isToday';
+
+dayjs.extend(weekday);
+dayjs.extend(isToday);
+dayjs.locale('ko');
 
 export default function HomeScreen() {
     const { user } = useUserData();
-    const today = dayjs().format('YYYY-MM-DD'); // 오늘 날짜
+    const today = dayjs().format('MM월 DD일 (ddd)'); // 오늘 날짜 형식
     const { familyMembers, setFamilyMembers, selectedFamily, setSelectedFamily } = useFamilyContext();
     const router = useRouter();
 
-    // 가족 데이터가 없는 경우 가져오기
     useEffect(() => {
         const loadFamilyData = async () => {
             if (user && familyMembers.length === 0) {
@@ -50,6 +56,11 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            {/* 오늘 날짜 표시 */}
+            <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>{today}</Text>
+            </View>
+
             {user && user.userId ? (
                 <MedicationList userId={user.userId} selectedDate={today} />
             ) : (
@@ -80,6 +91,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F0F4FF',
+    },
+    dateContainer: {
+        backgroundColor: '#AFB8DA',
+        padding: 0,
+        margin: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 80,
+    },
+    dateText: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
     },
     errorContainer: {
         flex: 1,
@@ -136,5 +160,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
-
