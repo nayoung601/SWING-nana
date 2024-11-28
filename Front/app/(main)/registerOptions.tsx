@@ -27,8 +27,8 @@ export default function RegisterOptions() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container}>
-        <Text style={styles.header}>등록 방법 선택하기</Text>
-        <Text style={styles.subHeader}>복약 정보 등록을 위해 처방전/약봉투 스캔 혹은 직접 입력 방식을 선택하세요!</Text>
+        <Text style={styles.header}>등록 항목 선택하기</Text>
+        <Text style={styles.subHeader}>나의 건강 정보를 기록해보세요!</Text>
         
         <View style={styles.buttonContainer}>
           <View style={styles.row}>
@@ -93,7 +93,7 @@ export default function RegisterOptions() {
                 source={require('../../assets/images/notes.png')} 
                 style={styles.icon}
               />
-              <Text style={styles.description}>간단한 일정과 메모를 등록하세요!</Text>
+              <Text style={styles.description}>간단한 일정과 메모를 입력하고 등록하세요!</Text>
               <TouchableOpacity style={styles.button} onPress={() => router.push('../utils/Schedule')}>
                 <Text style={styles.buttonText}>등록하기</Text>
               </TouchableOpacity>

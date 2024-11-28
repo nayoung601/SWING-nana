@@ -6,6 +6,7 @@ import MedicationList from '@/components/MedicationList';
 import BloodPressure from '@/components/BloodPressure';
 import BloodSugar from '@/components/BloodSugar';
 import { LineChart } from 'react-native-chart-kit';
+import Schedule from'@/components/Schedule';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -131,6 +132,7 @@ const HealthCalendar = () => {
               <MedicationList userId={user.userId} selectedDate={selectedDate} />
               <BloodPressure selectedDate={selectedDate} userId={user.userId} />
               <BloodSugar selectedDate={selectedDate} userId={user.userId} />
+              <Schedule selectedDate={selectedDate} userId={user.userId} />
             </>
           ) : (
             <Text>유저 정보를 불러오는 중입니다.</Text>
