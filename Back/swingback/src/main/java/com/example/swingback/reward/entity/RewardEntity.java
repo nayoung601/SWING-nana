@@ -14,10 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Table(name = "reward")
 public class RewardEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reward_id")
     private Long rewardId;
 
     @ManyToOne

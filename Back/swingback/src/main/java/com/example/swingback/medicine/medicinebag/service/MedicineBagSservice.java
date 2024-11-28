@@ -21,6 +21,8 @@ import com.example.swingback.medicine.medicineinput.entity.MedicineInputEntity;
 import com.example.swingback.notification.message.dto.MessageTemplateDTO;
 import com.example.swingback.notification.message.service.MessageTemplateService;
 import com.example.swingback.notification.total.service.TotalNotificationService;
+import com.example.swingback.reward.entity.RewardEntity;
+import com.example.swingback.reward.repository.RewardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,7 @@ public class MedicineBagSservice {
     private final BuilderCalendar builderCalendar;
     private final MessageTemplateService messageTemplateService;
     private final TotalNotificationService totalNotificationService;
+    private final RewardRepository rewardRepository;
 
     public void saveMedicineInputAndBag(MedicineBagDTO medicineBagDTO) {
         //요청을 보내는 회원의 회원정보 가져오기
@@ -412,9 +415,12 @@ public class MedicineBagSservice {
         intakeMedicineListRepository.save(byId);
     }
 
-    public void updateAllIntakeConfirmed(Long medicationManagementId) {
+    public String updateAllIntakeConfirmed(Long medicationManagementId) {
         MedicationManagementEntity medicationManagement = medicationManegementRepository.findById(medicationManagementId)
                 .orElseThrow(() -> new CustomException("유효하지 않은 복약관리 정보입니다."));
+        UserEntity byUserId = userRepository.findByUserId(medicationManagementId);
+        // 변경 전 상태 추적
+        boolean wasTotalIntakeConfirmed = medicationManagement.isTotalIntakeConfirmed();
 
         // 모든 약의 intakeConfirmed를 true로 설정
         for (IntakeMedicineListEntity medicine : medicationManagement.getMedicineList()) {
@@ -425,5 +431,21 @@ public class MedicineBagSservice {
         medicationManagement.setIntakeConfirmed(true);
 
         medicationManegementRepository.save(medicationManagement);
+
+        // 변경 감지 및 보상 로직
+        if (!wasTotalIntakeConfirmed && medicationManagement.isTotalIntakeConfirmed()) {
+            // 보상 생성
+            RewardEntity reward = RewardEntity.builder()
+                    .userId(byUserId)
+                    .rewardPoint(100L) // 예: 100 포인트 부여
+                    .rewardDate(LocalDateTime.now())
+                    .acquisition_type("TotalIntakeConfirmed")
+                    .build();
+
+            // Reward 저장
+            rewardRepository.save(reward);
+            return "100포인트 적립";
+        }
+        return null;
     }
 }

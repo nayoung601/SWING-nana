@@ -50,8 +50,12 @@ public class MedicineBagController {
         medicineBagSservice.updateIntakeMedicineListIntakeConfirmed(intakeMedicineListId,intakeConfirmed);
     }
     @PatchMapping("/api/medicine/intake/all")
-    public void updateAllIntakeConfirmed(@RequestParam Long medicationManagementId) {
-        medicineBagSservice.updateAllIntakeConfirmed(medicationManagementId);
+    public ResponseEntity<String> updateAllIntakeConfirmed(@RequestParam Long medicationManagementId) {
+        String s = medicineBagSservice.updateAllIntakeConfirmed(medicationManagementId);
+        return (s!=null) ?
+                ResponseEntity.status(HttpStatus.OK).body(s) :
+                ResponseEntity.status(HttpStatus.OK).build();
+
     }
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
