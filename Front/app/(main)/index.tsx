@@ -18,7 +18,11 @@ dayjs.locale('ko');
 
 export default function HomeScreen() {
     const { user } = useUserData();
-    const today = dayjs().format('MM월 DD일 (ddd)'); // 오늘 날짜 형식
+    
+    // 화면에 표시할 날짜와 MedicationList에 전달할 날짜를 분리
+    const todayDisplay = dayjs().format('MM월 DD일 (ddd)'); // 화면 표시용
+    const todayFormatted = dayjs().format('YYYY-MM-DD');   // MedicationList 전달용
+
     const { familyMembers, setFamilyMembers, selectedFamily, setSelectedFamily } = useFamilyContext();
     const router = useRouter();
 
@@ -58,11 +62,11 @@ export default function HomeScreen() {
         <View style={styles.container}>
             {/* 오늘 날짜 표시 */}
             <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>{today}</Text>
+                <Text style={styles.dateText}>{todayDisplay}</Text>
             </View>
 
             {user && user.userId ? (
-                <MedicationList userId={user.userId} selectedDate={today} />
+                <MedicationList userId={user.userId} selectedDate={todayFormatted} />
             ) : (
                 <View style={styles.errorContainer}>
                     <Text style={styles.errorText}>유저 정보를 불러오는 중입니다.</Text>
