@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,8 +26,17 @@ public class FamilyNewCodeController {
                 ResponseEntity.status(HttpStatus.OK).body(code.getNewCode());
     }
 
+    @GetMapping("/api/family/code/{userId}")
+    public ResponseEntity<String> findFamilyCodeInMypage(@PathVariable Long userId) {
+        String familyCodeByUserId = familyNewCodeServivce.findFamilyCodeByUserId(userId);
+        return familyCodeByUserId.equals("N")?
+                ResponseEntity.status(HttpStatus.OK).body("N"):
+                ResponseEntity.status(HttpStatus.OK).body(familyCodeByUserId);
+    }
+
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 

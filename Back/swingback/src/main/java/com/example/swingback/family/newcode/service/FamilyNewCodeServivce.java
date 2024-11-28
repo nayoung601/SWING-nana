@@ -70,4 +70,13 @@ public class FamilyNewCodeServivce {
         }
 
     }
+
+    public String findFamilyCodeByUserId(Long userId) {
+        UserEntity byUserId = userRepository.findByUserId(userId);
+        if (byUserId.getFamily() == null) {
+            return "N"; // 가입된 가족이 없을 경우
+        } else {
+            return byUserId.getFamily().getFamilyId(); // 가입된 가족이 있을 경우
+        }
+    }
 }
