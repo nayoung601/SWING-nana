@@ -418,7 +418,12 @@ public class MedicineBagSservice {
     public String updateAllIntakeConfirmed(Long medicationManagementId) {
         MedicationManagementEntity medicationManagement = medicationManegementRepository.findById(medicationManagementId)
                 .orElseThrow(() -> new CustomException("유효하지 않은 복약관리 정보입니다."));
-        UserEntity byUserId = userRepository.findByUserId(medicationManagementId);
+
+
+        UserEntity byUserId = userRepository.findByUserId(medicationManagement.getMedicineBag().getUserId().getUserId());
+        if (byUserId == null) {
+            throw new CustomException("해당 회원이 존재하지 않습니다");
+        }
         // 변경 전 상태 추적
         boolean wasTotalIntakeConfirmed = medicationManagement.isTotalIntakeConfirmed();
 
@@ -439,7 +444,7 @@ public class MedicineBagSservice {
                     .userId(byUserId)
                     .rewardPoint(100L) // 예: 100 포인트 부여
                     .rewardDate(LocalDateTime.now())
-                    .acquisition_type("TotalIntakeConfirmed")
+                    .acquisition_type("TotalIntakeConfirmed, " +" medicationManagementId : "+ medicationManagementId)
                     .build();
 
             // Reward 저장
