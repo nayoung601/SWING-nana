@@ -125,7 +125,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="profile/index"
           options={{
             title: '내 정보',
             tabBarIcon: ({ focused }) => (
@@ -142,6 +142,36 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="notification"
+          options={{
+            href: null, 
+          }}
+        />
+        <Tabs.Screen
+          name="chat"
+          options={{
+            href: null, 
+          }}
+        />
+        <Tabs.Screen
+          name="profile/userinfo"
+          options={{
+            href: null, 
+          }}
+        />
+        <Tabs.Screen
+          name="profile/profileMain"
+          options={{
+            href: null, 
+          }}
+        />
+        <Tabs.Screen
+          name="profile/setNotification"
+          options={{
+            href: null, 
+          }}
+        />
+        <Tabs.Screen
+          name="profile/familyLink"
           options={{
             href: null, 
           }}

@@ -1,7 +1,7 @@
 // import React, { useEffect, useState } from 'react';
 // import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 // import { useRouter } from 'expo-router';
-// import { useUserData } from '../../context/UserDataContext';
+// import { useUserData } from '../../../context/UserDataContext';
 
 // export default function Profile() {
 //   const router = useRouter();
@@ -131,3 +131,47 @@
 //     color: 'red',
 //   },
 // });
+
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import ProfileMain from './profileMain'; // 메인 화면 (사용자 프로필)
+import UserInfo from './userinfo'; // "내 정보" 페이지
+import NotificationSettings from './setNotification'; // "알림 설정" 페이지
+import FamilyLink from './familyLink'; 
+
+const Stack = createStackNavigator();
+
+export default function ProfileIndex() {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator
+        initialRouteName="ProfileMain"
+        screenOptions={{
+          headerShown: false, 
+        }}
+      >
+        <Stack.Screen
+          name="ProfileMain"
+          component={ProfileMain}
+          options={{ title: '프로필' }} // 기본 제목
+        />
+        <Stack.Screen
+          name="UserInfo"
+          component={UserInfo}
+          options={{ title: '내 정보' }}
+        />
+        <Stack.Screen
+          name="NotificationSettings"
+          component={NotificationSettings}
+          options={{ title: '알림 설정' }}
+        />
+        <Stack.Screen
+          name="FamilyLink"
+          component={FamilyLink}
+          options={{ title: '가족 연동' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
