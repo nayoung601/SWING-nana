@@ -74,5 +74,7 @@ public class MedicineBagEntity {
     @Column(name = "type")
     private String type;
 
-
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 }

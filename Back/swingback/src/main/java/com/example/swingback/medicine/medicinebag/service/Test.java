@@ -214,7 +214,7 @@ public class Test {
             LocalTime time
     ) {
         LocalDateTime notificationDateTime = LocalDateTime.of(date, time);
-        if (!LocalDateTime.now().isAfter(notificationDateTime)) {
+        if (!LocalDateTime.now().isAfter(notificationDateTime)) { // 현재시간 이전의 알람은 등록하지 않음
             MessageTemplateDTO messageTemplate = messageTemplateService.generateMessage(4L,
                     Map.of("medicine", dto.getMedicineBagTitle()));
             totalNotificationService.saveNotification(
