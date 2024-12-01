@@ -205,4 +205,42 @@ public class FamilyRegisterRequestService {
         // FCM알림 전송
 //        fcmService.sendNotification(latestTokenEntity.getToken(),messageTemplateDTO.getTitle(),messageTemplateDTO.getBody());
     }
+
+    public String deleteFamily(Long userId) {
+        // 1. 요청 사용자 정보 가져오기
+        UserEntity requestUser = userRepository.findByUserId(userId);
+        // 요청한 사용자 ID가 유효한지 확인
+        if (requestUser == null) {
+            throw new CustomException("유효하지 않은 사용자입니다. 요청한 사용자를 확인해주세요.");
+        }
+
+        // 2. 가족 대표 여부 확인
+        FamilyEntity familyEntity = familyRepository.findByFamilyRepresentative(userId);
+
+        if (familyEntity != null) {
+            return handleFamilyRepresentativeDeletion(requestUser, familyEntity);
+        } else {
+            // 3. 가족 대표가 아닌 경우 처리
+            detachUserFromFamily(requestUser);
+            return "삭제 완료";
+        }
+    }
+
+    private String handleFamilyRepresentativeDeletion(UserEntity requestUser, FamilyEntity familyEntity) {
+        List<UserEntity> familyMembers = userRepository.findByFamily(familyEntity);
+
+        if (familyMembers.size() == 1) {
+            // 가족에 유일한 사용자일 경우
+            detachUserFromFamily(requestUser);
+            familyRepository.delete(familyEntity);
+            return "탈퇴 완료";
+        } else {
+            throw new CustomException("다른 가족들이 모두 탈퇴한 후에만 탈퇴가 가능합니다.");
+        }
+    }
+
+    private void detachUserFromFamily(UserEntity user) {
+        user.updateFamily(null);
+        userRepository.save(user);
+    }
 }
