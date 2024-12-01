@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUserData } from '../../../context/UserDataContext';
@@ -10,9 +10,19 @@ export default function ProfileMain() {
   const { user, logout } = useUserData();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.replace('/login'); // user가 없으면 로그인 페이지로 이동
+    }
+  }, [user]);
+
+  if (!user) {
+    return null; // user가 없으면 아무것도 렌더링하지 않음
+  }
+
   const handleLogout = async () => {
-    await logout(); // UserDataContext에서 제공하는 logout 함수 호출
-    router.replace('/login'); // 로그아웃 후 로그인 페이지로 이동
+    await logout(); 
+    router.replace('/login'); 
   };
 
   return (
@@ -28,13 +38,13 @@ export default function ProfileMain() {
             >
                 <View style={styles.buttonContent}>
                     <Image
-                    source={require('../../../assets/images/userinfo.png')} // 왼쪽 아이콘
+                    source={require('../../../assets/images/userinfo.png')} 
                     style={styles.leftIcon}
                     />
                     <Text style={styles.buttonText}>내 정보</Text>
                 </View>
                 <Image
-                    source={require('../../../assets/images/next.png')} // 오른쪽 아이콘
+                    source={require('../../../assets/images/next.png')} 
                     style={styles.rightIcon}
                 />
             </TouchableOpacity>
@@ -45,13 +55,13 @@ export default function ProfileMain() {
             >
                 <View style={styles.buttonContent}>
                     <Image
-                    source={require('../../../assets/images/setnotify.png')} // 왼쪽 아이콘
+                    source={require('../../../assets/images/setnotify.png')} 
                     style={styles.leftIcon}
                     />
                     <Text style={styles.buttonText}>알림 설정</Text>
                 </View>
                 <Image
-                    source={require('../../../assets/images/next.png')} // 오른쪽 아이콘
+                    source={require('../../../assets/images/next.png')} 
                     style={styles.rightIcon}
                 />
             </TouchableOpacity>
@@ -62,13 +72,13 @@ export default function ProfileMain() {
             >
                 <View style={styles.buttonContent}>
                     <Image
-                    source={require('../../../assets/images/familylink.png')} // 왼쪽 아이콘
+                    source={require('../../../assets/images/familylink.png')} 
                     style={styles.leftIcon}
                     />
                     <Text style={styles.buttonText}>가족 연동</Text>
                 </View>
                 <Image
-                    source={require('../../../assets/images/next.png')} // 오른쪽 아이콘
+                    source={require('../../../assets/images/next.png')} 
                     style={styles.rightIcon}
                 />
             </TouchableOpacity>

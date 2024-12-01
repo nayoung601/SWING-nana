@@ -44,19 +44,19 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     header: {
-        flexDirection: 'row', // 아이콘과 텍스트를 가로로 배치
-        alignItems: 'center', // 세로 정렬
+        flexDirection: 'row', 
+        alignItems: 'center', 
         paddingBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0',
-        justifyContent: 'space-between', // 요소 간격을 균등하게 분배
+        justifyContent: 'space-between', 
         width: '100%',
         marginTop: 5,
     },
     backIcon: {
-        width: 20, // 아이콘 너비
-        height: 20, // 아이콘 높이
-        marginRight: 8, // 텍스트와 간격
+        width: 20, 
+        height: 20, 
+        marginRight: 8, 
     },
     headerTitle: {
         fontSize: 20,
