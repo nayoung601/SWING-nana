@@ -122,15 +122,16 @@ public class MedicineBagSservice {
             MedicineBagEntity medicineBag,
             UserEntity user
     ) {
+        // 아침,점심,저녁 , 자기전에 맞는 시간을 dto를 이용해서 생성
         Map<String, LocalTime> notificationTimes = extractNotificationTimes(dto);
         LocalDate currentDate = dto.getRegistrationDate();
 
-        if (currentDate.isBefore(LocalDate.now())) {
-            while (!currentDate.isAfter(dto.getEndDate())) {
+        if (currentDate.isBefore(LocalDate.now())) { // 시작 시간이 현재 시간보다 과거면 안에 로직 실행
+            while (!currentDate.isAfter(dto.getEndDate())) { // 시작날짜와 끝나는 날짜까지 하루를 더해가면서 로직실행
                 for (Map.Entry<String, LocalTime> entry : notificationTimes.entrySet()) {
-                    String timeType = entry.getKey();
+                    String timeType = entry.getKey(); //map에 저장된 알림날짜에대한 로직 저장하기
                     LocalTime time = entry.getValue();
-                    if (time != null) {
+                    if (time != null) { // 알림시간이 존재한다면 다음 로직 실행
                         createNotificationForTime(dto, medicineBag, user, currentDate, timeType, time);
                     }
                 }
@@ -143,9 +144,11 @@ public class MedicineBagSservice {
                     String timeType = entry.getKey();
                     LocalTime time = entry.getValue();
                     if (time != null) {
-                        if (currentDate.atTime(time).isBefore(LocalDateTime.now())) {
-                            // MedicineBagEntity의 endDate를 수정
+                        // 당일 등록기준 , 현재시간보다 과거의 알림이 존재하면 if문 실행
+                        if (currentDate.atTime(time).isBefore(LocalDateTime.now())) { 
+                            // MedicineBagEntity의 endDate를 수정, 캘린더와 약데이터 보내주는거 수정위해서 추가
                             medicineBag.setEndDate(dto.getEndDate().plusDays(1));
+                            
 
                             createNotificationForTime(
                                     dto,
