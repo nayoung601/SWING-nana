@@ -7,6 +7,7 @@ import com.example.swingback.family.existingcode.service.FamilyRegisterRequestSe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,17 +38,16 @@ public class FamilyRegisterController {
 
     @DeleteMapping("/api/family/code/{userId}")
     public ResponseEntity<String> deleteFamilyCode(@PathVariable Long userId) {
-        try {
             String s = familyRegisterRequestService.deleteFamily(userId);
             return ResponseEntity.status(HttpStatus.OK).body(s);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
 
     }
 
-    @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
+    @ExceptionHandler(CustomException.class)
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(e.getMessage());
     }
+
 }
