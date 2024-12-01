@@ -79,6 +79,31 @@ export default function FamilyLink() {
     }
   };
 
+  // 가족 탈퇴 요청
+  const handleFamilyUnlink = async () => {
+    try {
+      setLoading(true); // 로딩 상태 설정
+      const response = await fetch(`http://localhost:8080/api/family/code/${user.userId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        Alert.alert('탈퇴 성공', '가족 연동이 성공적으로 해제되었습니다.');
+        setIsLinked(false); // 가족 연동 상태 해제
+        setFamilyCode(''); // 가족 코드 초기화
+      } else {
+        const errorMessage = await response.text();
+        Alert.alert('탈퇴 실패', errorMessage || '가족 탈퇴 요청에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error unlinking family:', error);
+      Alert.alert('오류', '가족 탈퇴 중 문제가 발생했습니다.');
+    } finally {
+      setLoading(false); // 로딩 해제
+    }
+  };
+
   // 컴포넌트가 마운트될 때 API 호출
   useEffect(() => {
     checkFamilyLink();
@@ -146,11 +171,11 @@ export default function FamilyLink() {
             </Text>
 
             {/* 가족 탈퇴 버튼 */}
-            <TouchableOpacity style={styles.deleteButton} onPress={() => console.log('가족 탈퇴하기')}>
+            <TouchableOpacity style={styles.deleteButton} onPress={handleFamilyUnlink}>
               <Text style={styles.deleteButtonText}>가족 탈퇴하기</Text>
             </TouchableOpacity>
             <Text style={styles.descriptionText}>
-              가족 탈퇴를 하게 되면 가족 연동 정보와 <br></br>가족 코드 내역이 모두 사라집니다.
+              가족 탈퇴를 하게 되면 가족 연동 정보와 <br />가족 코드 내역이 모두 사라집니다.
             </Text>
           </View>
         )}
