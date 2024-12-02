@@ -212,29 +212,31 @@ export default function BloodSugar({ selectedDate, userId }) {
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>혈당 그래프</Text>
           <BarChart
-            data={{
-              labels: chartData.labels, // 예: 공복, 아침 식전, 점심 식전
-              datasets: [
-                { data: chartData.datasets[0].data , // 혈당 값
-                  color: () => 'rgba(255, 99, 132, 1)',
+          data={{
+            labels: chartData.labels, // 예: 공복, 아침 식전, 점심 식전
+            datasets: [
+              {
+                data: chartData.datasets[0].data, // 혈당 값
+                color: () => 'rgba(0,0,0, 1)', // 막대 색상을 불투명한 하얀색으로 설정
               },
-              ],
-            }}
-            width={Dimensions.get('window').width - 40}
-            height={220}
-            chartConfig={{
-              backgroundColor: '#fff',
-              backgroundGradientFrom: '#7686DB',
-              backgroundGradientTo: '#7686DB',
-              color: () => `rgba(54, 162, 235)`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            }}
-            fromZero
-            style={{
-              marginVertical: 10,
-              borderRadius: 16,
-            }}
-          />
+            ],
+          }}
+          width={Dimensions.get('window').width - 40}
+          height={220}
+          chartConfig={{
+            backgroundColor: '#cccccc', // 배경 색상 (회색)
+            backgroundGradientFrom: '#cccccc', // 그라디언트 시작 색
+            backgroundGradientTo: '#cccccc', // 그라디언트 끝 색
+            color: (opacity = 1) => 'rgba(0,0,0,0.5)', // 막대 색상 (검정)
+            labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`, // 라벨 색상
+          }}
+          fromZero
+          style={{
+            marginVertical: 10,
+            borderRadius: 16,
+          }}
+        />
+
           <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>닫기</Text>
           </TouchableOpacity>
