@@ -1,25 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, TextInput, Button, FlatList, Text, StyleSheet } from 'react-native';
 import { connectWebSocket, sendMessage } from '@/components/ChatWebsocket';
-import { useUserData } from '@/context/UserDataContext';
 
 const ChatComponent = () => {
   const [roomId, setRoomId] = useState(''); // 현재 방 ID
   const [messages, setMessages] = useState([]); // 메시지 목록
   const [input, setInput] = useState(''); // 메시지 입력값
   const [stompClient, setStompClient] = useState(null); // WebSocket 클라이언트
+  const [familyRole, setFamilyRole] = useState(null); // 사용자 역할
+  const [userId, setUserId] = useState(null); // 사용자 ID
+  const flatListRef = useRef(null); // FlatList 참조
 
-  const { user } = useUserData(); // UserDataContext에서 사용자 데이터 가져오기
+  // 사용자 데이터 가져오기
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/userdata', {
+        method: 'GET',
+        credentials: 'include', // 인증 포함
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserId(data.userId);
+        setFamilyRole(data.familyRole);
+        console.log('User data fetched:', data);
+      } else {
+        console.error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   // 채팅방 조회 또는 생성
   const fetchOrCreateRoom = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/rooms?userId=${user.userId}`, {
+      const response = await fetch(`http://localhost:8080/api/rooms?userId=${userId}`, {
         method: 'POST',
       });
       if (response.ok) {
         const room = await response.json();
-        setRoomId(room.roomId); // 방 ID 설정
+        setRoomId(room.roomId); // 기본 roomId 설정
+        console.log('Room fetched or created:', room);
       } else {
         console.error('Failed to fetch or create room');
       }
@@ -37,6 +58,9 @@ const ChatComponent = () => {
       if (response.ok) {
         const data = await response.json();
         setMessages(data); // 기존 메시지 상태 초기화 후 추가
+        console.log('Messages fetched:', data);
+        // 메시지 가져온 후 아래로 스크롤
+        flatListRef.current?.scrollToEnd({ animated: true });
       } else {
         console.error('Failed to fetch messages for room:', roomId);
       }
@@ -66,7 +90,12 @@ const ChatComponent = () => {
 
       const subscription = stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
         if (message.body) {
-          setMessages((prevMessages) => [...prevMessages, JSON.parse(message.body)]);
+          setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages, JSON.parse(message.body)];
+            // 메시지 추가 시 아래로 스크롤
+            flatListRef.current?.scrollToEnd({ animated: true });
+            return updatedMessages;
+          });
         }
       });
 
@@ -84,11 +113,11 @@ const ChatComponent = () => {
 
   // 메시지 전송
   const handleSendMessage = () => {
-    if (input.trim() && stompClient && stompClient.connected && user.familyRole) {
+    if (input.trim() && stompClient && stompClient.connected && familyRole) {
       const message = {
         type: 'TALK',
         roomId,
-        sender: user.familyRole,
+        sender: familyRole,
         message: input,
       };
       sendMessage(stompClient, message);
@@ -100,14 +129,16 @@ const ChatComponent = () => {
 
   // 초기 데이터 로드
   useEffect(() => {
-    if (user && user.userId) {
-      fetchOrCreateRoom();
-    }
-  }, [user]);
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (userId) fetchOrCreateRoom();
+  }, [userId]);
 
   // 메시지 렌더링 (카카오톡 스타일)
   const renderMessage = ({ item }) => {
-    const isMine = item.sender === user.familyRole;
+    const isMine = item.sender === familyRole;
 
     return (
       <View style={[styles.messageContainer, isMine ? styles.myMessage : styles.otherMessage]}>
@@ -121,9 +152,11 @@ const ChatComponent = () => {
     <View style={styles.container}>
       <FlatList
         data={messages}
+        ref={flatListRef} // FlatList 참조 추가
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderMessage}
         contentContainerStyle={styles.messagesList}
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })} // 크기 변경 시 스크롤
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -131,6 +164,8 @@ const ChatComponent = () => {
           value={input}
           onChangeText={setInput}
           placeholder="메시지를 입력하세요"
+          onSubmitEditing={handleSendMessage} // 엔터를 누르면 메시지 전송
+          returnKeyType="send" // 키보드의 엔터 키를 전송 키로 설정
         />
         <Button title="전송" onPress={handleSendMessage} />
       </View>
