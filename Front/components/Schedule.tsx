@@ -23,8 +23,8 @@ export default function Schedule({ selectedDate, userId }) {
           withCredentials: true,
         });
 
-        const scheduleData = response.data.filter((item) => item.type === 'schedule');
-        setSchedules(scheduleData || []); // 데이터가 없으면 빈 배열 설정
+        const scheduleData = response.data.find((item) => item.type === 'schedule');
+        setSchedules(scheduleData?.measurements || []); // 데이터가 없으면 빈 배열 설정
       } catch (error) {
         console.error('스케줄 데이터 가져오기 실패:', error.message);
         setSchedules([]); // 에러 발생 시 상태 초기화
@@ -51,7 +51,7 @@ export default function Schedule({ selectedDate, userId }) {
           {schedules.map((schedule, index) => (
             <View key={index} style={styles.scheduleContainer}>
               <Text style={styles.scheduleTitle}>{schedule.measureTitle}</Text>
-              <Text style={styles.scheduleValue}>{schedule.keyValue}</Text>
+              <Text style={styles.scheduleValue}>{schedule.body}</Text>
             </View>
           ))}
         </View>

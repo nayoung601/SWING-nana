@@ -10,35 +10,44 @@ export default function Schedule() {
   const { user } = useUserData(); // 로그인한 사용자 정보 가져오기
   const [scheduleData, setScheduleData] = useState({
     measureTitle: '', // 예약 제목 (예: "정형외과 예약")
-    keyValue: '', // 예약 세부 내용 (예: "정형외과 1시 예약")
+    Detail: '', // 예약 세부 내용 (예: "정형외과 1시 예약")
     date: '', // 날짜
   });
-
+ 
   const formatDateWithTime = (date) => {
     const currentTime = new Date().toISOString().split('T')[1]; // 현재 시간 가져오기
     return `${date}T${currentTime}`;
   };
 
   const handleSave = async () => {
-    if (!scheduleData.measureTitle || !scheduleData.keyValue || !scheduleData.date) {
+    if (!scheduleData.measureTitle || !scheduleData.Detail || !scheduleData.date) {
       alert('모든 정보를 입력해주세요.');
       return;
     }
 
-    const postData = {
+    const postData = [
+      {
       userId: user.userId,
       type: 'schedule',
       registrationDate: formatDateWithTime(scheduleData.date),
       measureTitle: scheduleData.measureTitle,
       keyName: 'body',
-      keyValue: scheduleData.keyValue,
-    };
+      keyValue: scheduleData.Detail,
+    },
+    // {
+    //   userId: user.userId,
+    //   type: 'schedule',
+    //   registrationDate: formatDateWithTime(scheduleData.date),
+    //   measureTitle: scheduleData.measureTitle,
+    //   keyName: 'keyValue',
+    //   keyValue: scheduleData.Detail,
+    // },
+  ];
+  console.log('POST 데이터:', postData);
 
     try {
-      await fetch('http://localhost:8080/api/healthcare', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData),
+      await axios.post('http://localhost:8080/api/healthcare', postData, {
+      withCredentials: true, // 쿠키 포함해서 전송 
       });
       Alert.alert('성공', '스케줄이 성공적으로 저장되었습니다.');
       router.push('../(main)/registerOptions');
@@ -46,16 +55,6 @@ export default function Schedule() {
       console.error('데이터 전송 실패:', error);
       Alert.alert('오류', '스케줄 저장 중 문제가 발생했습니다.');
     }
-    // try {
-    //   await axios.post('http://localhost:8080/api/healthcare', postData, {
-    //     withCredentials: true,
-    //   });
-    //   alert('스케줄이 성공적으로 저장되었습니다.');
-    //   router.push('../(main)/registerOptions'); // 저장 후 이동
-    // } catch (error) {
-    //   console.error('스케줄 저장 실패:', error);
-    //   alert('스케줄 저장 중 문제가 발생했습니다.');
-    // }
   };
 
   return (
@@ -81,8 +80,8 @@ export default function Schedule() {
       <TextInput
         style={styles.input}
         placeholder="내용 입력"
-        value={scheduleData.keyValue}
-        onChangeText={(value) => setScheduleData({ ...scheduleData, keyValue: value })}
+        value={scheduleData.Detail}
+        onChangeText={(value) => setScheduleData({ ...scheduleData, Detail: value })}
       />
 
       <Text style={styles.label}>날짜</Text>
