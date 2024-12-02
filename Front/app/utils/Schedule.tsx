@@ -92,7 +92,7 @@ export default function Schedule() {
         onChangeText={(value) => setScheduleData({ ...scheduleData, date: value })}
       />
 
-      <Button title="저장" onPress={handleSave} />
+      <Button title="저장" onPress={handleSave} color="#7686DB"/>
     </View>
   );
 }

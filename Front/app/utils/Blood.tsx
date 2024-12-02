@@ -191,7 +191,7 @@ export default function Blood() {
       />
 
       {/* 저장 버튼 */}
-      <Button title="저장" onPress={handleSave} />
+      <Button title="저장" onPress={handleSave} color="#7686DB"/>
     </View>
   );
 }
