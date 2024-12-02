@@ -24,7 +24,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // 기존 그룹채팅용 설정
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/pub");
+        // pub은 메시지 송신, sub은 메시지 구독에 사용
+        registry.setApplicationDestinationPrefixes("/pub"); // 송신 메시지
+        registry.enableSimpleBroker("/sub"); // 구독 경로
     }
 
 
