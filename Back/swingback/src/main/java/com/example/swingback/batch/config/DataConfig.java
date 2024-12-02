@@ -28,7 +28,8 @@ import java.util.HashMap;
                 "com.example.swingback.healthcare.healthinfo.repository",
                 "com.example.swingback.chat.repository",
                 "com.example.swingback.healthcare.notificationtime.repository",
-                "com.example.swingback.reward.repository"
+                "com.example.swingback.reward.repository",
+                "com.example.swingback.medicine.medicinedata.repository"
 
         },
         entityManagerFactoryRef = "dataEntityManager",
@@ -61,7 +62,8 @@ public class DataConfig {
                 "com.example.swingback.healthcare.healthinfo.entity",
                 "com.example.swingback.chat.entity",
                 "com.example.swingback.healthcare.notificationtime.entity",
-                "com.example.swingback.reward.entity"
+                "com.example.swingback.reward.entity",
+                "com.example.swingback.medicine.medicinedata.entity"
         });
         em. setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 

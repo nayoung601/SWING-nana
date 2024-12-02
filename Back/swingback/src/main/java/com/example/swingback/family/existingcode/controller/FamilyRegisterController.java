@@ -43,11 +43,9 @@ public class FamilyRegisterController {
 
     }
 
-    @ExceptionHandler(CustomException.class)
+    @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
 }

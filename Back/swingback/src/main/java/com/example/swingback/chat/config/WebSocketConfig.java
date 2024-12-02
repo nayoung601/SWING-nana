@@ -21,8 +21,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 
+    // 기존 그룹채팅용 설정
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/pub");
     }
+
+
 }
