@@ -50,8 +50,8 @@ public class SecurityConfig {
 
         http
                 .oauth2Login((oauth2) -> oauth2
-                        .loginPage("http://localhost:3000/login") // 로그인 페이지 URL
-                        .defaultSuccessUrl("http://localhost:3000/successpage") // 로그인 후 리디렉션
+                        .loginPage("http://localhost:8081/login") // 로그인 페이지 URL
+                        .defaultSuccessUrl("http://localhost:8081/successpage") // 로그인 후 리디렉션
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)));
 
@@ -59,7 +59,7 @@ public class SecurityConfig {
         http
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .maximumSessions(1) // 한 세션만 허용
-                        .expiredUrl("http://localhost:3000/login?expired=true")); // 세션 만료 시 리디렉션
+                        .expiredUrl("http://localhost:8081/login?expired=true")); // 세션 만료 시 리디렉션
 
         return http.build();
     }
