@@ -17,7 +17,7 @@ public class FCMService {
 
     public void sendNotification(String token, String title, String body) {
         Map<String,String> data= new HashMap<>();
-        data.put("url", "http://localhost:3000/notification"); // 링크 추가
+        data.put("url", "http://localhost:8081/notification"); // 링크 추가
         // 파이어베이스 서버로 요청을 보낼 메시지 만들기
         Message message = Message.builder()
                 .setToken(token)

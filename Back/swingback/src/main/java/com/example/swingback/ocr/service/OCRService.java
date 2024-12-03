@@ -44,13 +44,13 @@ public class OCRService {
                         "Extract the dispensing date (조제일자), medicine name (약이름/약품명), dosage (투약량/수량), frequency (횟수/투여횟수), and duration (투약일수/일수) " +
                                 "from the following OCR text. Return the result as a JSON object in the following format: \n\n" +
                                 "{\n" +
-                                "  \"startDate\": \"조제일자\",\n" +
-                                "  \"medicines\": [\n" +
+                                "  \"registrationDate\": \"조제일자\",\n" +
+                                "  \"medicineList\": [\n" +
                                 "    {\n" +
-                                "      \"name\": \"약이름\",\n" +
-                                "      \"dosage\": \"투약량\",\n" +
-                                "      \"frequency\": \"횟수\",\n" +
-                                "      \"duration\": \"일수\"\n" +
+                                "      \"medicineName\": \"약이름\",\n" +
+                                "      \"dosagePerIntake\": \"투약량\",\n" +
+                                "      \"frequencyIntake\": \"횟수\",\n" +
+                                "      \"durationIntake\": \"일수\"\n" +
                                 "    }\n" +
                                 "  ]\n" +
                                 "}\n\n" +
