@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { useUserData } from '@/context/UserDataContext';
 
 const NotificationPage = () => {
@@ -22,7 +22,7 @@ const NotificationPage = () => {
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch notifications');
+          throw new Error('알림이 존재하지 않습니다.');
         }
 
         const data = await response.json();
@@ -49,14 +49,14 @@ const NotificationPage = () => {
   if (error) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Error: {error}</Text>
+        <Text style={styles.errorText}>알림이 존재하지 않습니다.</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Notifications</Text>
+      <Text style={styles.title}>알림</Text>
       <FlatList
         data={notifications}
         keyExtractor={(item) => item.notificationId.toString()}
@@ -64,6 +64,22 @@ const NotificationPage = () => {
           <View style={styles.notificationItem}>
             <Text style={styles.notificationType}>{item.type}</Text>
             <Text style={styles.notificationMessage}>{item.message}</Text>
+            {item.type === '가족 요청 알림' && (
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.approveButton}
+                  onPress={() => console.log('승인 버튼 클릭:', item.requestId)}
+                >
+                  <Text style={styles.buttonText}>승인</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.rejectButton}
+                  onPress={() => console.log('거부 버튼 클릭:', item.requestId)}
+                >
+                  <Text style={styles.buttonText}>거부</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
         ListEmptyComponent={<Text style={styles.emptyText}>No notifications available.</Text>}
@@ -73,57 +89,82 @@ const NotificationPage = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#f9f9f9',
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    errorContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    errorText: {
-      color: 'red',
-      fontSize: 16,
-    },
-    notificationItem: {
-      backgroundColor: '#ffffff',
-      borderRadius: 8,
-      padding: 15,
-      marginBottom: 10,
-      shadowColor: '#000',
-      shadowOpacity: 0.1,
-      shadowOffset: { width: 0, height: 2 },
-      shadowRadius: 4,
-      elevation: 3,
-    },
-    notificationType: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
-    notificationMessage: {
-      fontSize: 16,
-      color: '#555',
-    },
-    emptyText: {
-      textAlign: 'center',
-      fontSize: 16,
-      color: '#888',
-    },
-  });
-  
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  notificationItem: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  notificationType: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  notificationMessage: {
+    fontSize: 16,
+    color: '#555',
+  },
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#888',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  approveButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 20,
+    alignItems: 'center',
+  },
+  rejectButton: {
+    backgroundColor: '#FF4D4D',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginLeft: 20,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
+});
 
 export default NotificationPage;
