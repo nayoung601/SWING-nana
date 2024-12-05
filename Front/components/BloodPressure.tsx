@@ -35,11 +35,11 @@
 //     fetchBloodPressure();
 //   }, [selectedDate, userId]);
 
-//   const convertToKoreanTime = (utcDate) => {
-//     const localDate = new Date(utcDate);
-//     localDate.setHours(localDate.getHours() + 9); // UTC에 9시간 추가
-//     return localDate.toLocaleString(); // 사람이 읽기 쉬운 포맷으로 반환
-//   };
+  // const convertToKoreanTime = (utcDate) => {
+  //   const localDate = new Date(utcDate);
+  //   localDate.setHours(localDate.getHours() + 9); // UTC에 9시간 추가
+  //   return localDate.toLocaleString(); // 사람이 읽기 쉬운 포맷으로 반환
+  // };
 
 //   return (
 //     <View style={styles.container}>
@@ -584,6 +584,12 @@ export default function BloodPressure({ selectedDate, userId }) {
     fetchBloodPressure();
   }, [selectedDate, userId]);
 
+  const convertToKoreanTime = (utcDate) => {
+    const localDate = new Date(utcDate);
+    localDate.setHours(localDate.getHours() + 9); // UTC에 9시간 추가
+    return localDate.toLocaleString(); // 사람이 읽기 쉬운 포맷으로 반환
+  };
+
   const toggleModal = () => setModalVisible(!isModalVisible);
 
   // 데이터 병합: 수축기와 이완기 혈압을 하나의 데이터셋으로 구성
@@ -615,7 +621,7 @@ export default function BloodPressure({ selectedDate, userId }) {
               <Text style={styles.measurementValue}>
                 {bp.highpressure}/{bp.lowpressure} mmHg
               </Text>
-              <Text style={styles.measurementDate}>{bp.registrationDate}</Text>
+              <Text style={styles.measurementDate}> {convertToKoreanTime(bp.registrationDate)}</Text>
             </View>
           ))}
         </TouchableOpacity>

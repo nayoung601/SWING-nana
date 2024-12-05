@@ -164,6 +164,12 @@ export default function BloodSugar({ selectedDate, userId }) {
     fetchBloodSugar();
   }, [selectedDate, userId]);
 
+  const convertToKoreanTime = (utcDate) => {
+  const localDate = new Date(utcDate);
+  localDate.setHours(localDate.getHours() + 9);
+  return localDate.toLocaleString();
+};
+
   const toggleModal = () => setModalVisible(!isModalVisible);
 
   const chartData = {
@@ -193,7 +199,7 @@ export default function BloodSugar({ selectedDate, userId }) {
             <View key={index} style={styles.measurementContainer}>
               <Text style={styles.measurementTitle}>{bs.measureTitle}</Text>
               <Text style={styles.measurementValue}>{bs.bloodsugar} mg/dL</Text>
-              <Text style={styles.measurementDate}>{bs.registrationDate}</Text>
+              <Text style={styles.measurementDate}>{convertToKoreanTime(bs.registrationDate)}</Text>
             </View>
           ))}
         </TouchableOpacity>
