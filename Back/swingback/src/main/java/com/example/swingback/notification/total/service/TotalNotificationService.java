@@ -116,5 +116,11 @@ public class TotalNotificationService {
     }
 
 
-
+    public void readButtonClick(Long notificationId) {
+        TotalNotificationEntity byId =
+                notificationRepository.findById(notificationId)
+                        .orElseThrow(()->new CustomException("존재하지 않는 알림입니다."));
+        byId.setRead(true);
+        notificationRepository.save(byId);
+    }
 }

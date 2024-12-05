@@ -52,6 +52,10 @@ public class TotalNotificationEntity {
     @Column(name = "message") // 알림창에 띄워줄 알림 메시지
     private String message;
 
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     public void setSendTime(LocalDateTime sendTime) {
         this.sendTime = sendTime;
     }
