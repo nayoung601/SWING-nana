@@ -133,32 +133,34 @@ export default function SetAlarm() {
       const selectedCheckboxCount = ['morning', 'lunch', 'dinner', 'beforeSleep']
         .filter((time) => medicine[`${time}Timebox`])
         .length;
-
+  
       if (!medicineBagTitle.trim()) {
         validationErrors.push('약봉투 이름을 입력해주세요.');
       }
-
+  
       if (selectedCheckboxCount !== medicine.frequencyIntake) {
         validationErrors.push(
           `약물 "${medicine.medicineName}"의 체크박스 선택 개수가 잘못되었습니다. (${medicine.frequencyIntake}개를 선택해야 합니다)`
         );
       }
     });
-
+  
     if (hidden === null) {
       validationErrors.push('연동 가족 공개 여부를 선택해주세요.');
     }
-
+  
     if (validationErrors.length > 0) {
       const errorMessage = validationErrors.join('\n');
-      if (Platform.OS === 'web') {
+  
+      // 환경에 따른 경고 메시지 처리
+      if (Platform.OS === 'web' || Platform.OS === 'windows') {
         window.alert(errorMessage);
       } else {
         Alert.alert('유효성 검사 실패', errorMessage);
       }
       return;
     }
-
+  
     const maxDurationIntake = Math.max(
       ...editableMedicineList.map((medicine) => medicine.durationIntake || 0)
     );
