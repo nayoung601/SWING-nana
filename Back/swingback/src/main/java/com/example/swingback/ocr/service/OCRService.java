@@ -37,6 +37,7 @@ public class OCRService {
         // ChatGPT 요청 데이터
         Map<String, Object> chatRequest = new HashMap<>();
         chatRequest.put("model", "gpt-3.5-turbo");
+//        chatRequest.put("model", "gpt-4");
         chatRequest.put("messages", new Object[]{
                 Map.of("role", "system", "content",
                         "You are an assistant that extracts dispensing date and detailed medicine information from OCR data."),
