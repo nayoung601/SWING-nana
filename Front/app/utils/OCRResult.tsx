@@ -155,7 +155,7 @@ const OCRResult: React.FC = () => {
                   onPress={() => handleDeleteMedicine(index)} // 삭제 기능
                 >
                   <Image
-                    source={require('C:/Users/naxo/swing-nana/Front/assets/images/delete.png')}
+                    source={require('../../assets/images/delete.png')}
                     style={styles.deleteIcon}
                   />
                 </TouchableOpacity>

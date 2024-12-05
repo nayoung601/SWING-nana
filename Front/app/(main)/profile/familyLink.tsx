@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ActivityIndicator, Alert, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUserData } from '../../../context/UserDataContext';
 
@@ -10,6 +10,10 @@ export default function FamilyLink() {
   const [familyCode, setFamilyCode] = useState(''); // 가족 코드
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [inputFamilyCode, setInputFamilyCode] = useState(''); // 사용자 입력 가족 코드
+  const [modalVisible, setModalVisible] = useState(false); // 모달 표시 여부
+  const [modalMessage, setModalMessage] = useState(''); // 모달에 표시할 메시지
+  const [error, setError] = useState(false);
+
 
   // 가족 연동 여부 확인
   const checkFamilyLink = async () => {
@@ -54,9 +58,13 @@ export default function FamilyLink() {
 
   // 가족 연동 요청
   const handleFamilyLinkRequest = async () => {
+    if (!inputFamilyCode.trim()) {
+      setError(true); // 에러 상태 활성화
+      return;
+    }    
     try {
       setLoading(true); // 로딩 상태 설정
-      const response = await fetch('http://localhost:8080/api/code/request', {
+      const response = await fetch(`http://localhost:8080/api/code/request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -66,14 +74,17 @@ export default function FamilyLink() {
       });
 
       if (response.ok) {
-        Alert.alert('연동 성공', '가족 연동이 완료되었습니다!');
+        setModalMessage('가족 연동 요청을 보냈습니다!');
+        setModalVisible(true); // 성공 모달 표시
         checkFamilyLink(); // 가족 연동 여부 다시 확인
       } else {
-        Alert.alert('연동 실패', '가족 연동 요청에 실패했습니다.');
+        setModalMessage('가족 코드가 잘못되었습니다!');
+        setModalVisible(true); // 실패 모달 표시
       }
     } catch (error) {
       console.error('Error requesting family link:', error);
-      Alert.alert('오류', '가족 연동 중 문제가 발생했습니다.');
+      setModalMessage('가족 코드가 잘못되었습니다!');
+      setModalVisible(true); // 실패 모달 표시
     } finally {
       setLoading(false); // 로딩 해제
     }
@@ -148,13 +159,19 @@ export default function FamilyLink() {
               첫 연동이라면 가족 코드를 발급받아 가족 구성원에게 알려주세요!
             </Text>
 
-            {/* 가족 코드 입력 필드 */}
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                error && { borderColor: 'red' }, // 에러 시 테두리 빨간색
+              ]}
               placeholder="가족 코드 입력"
               value={inputFamilyCode} // TextInput 값
-              onChangeText={setInputFamilyCode} // 입력값 업데이트
+              onChangeText={(text) => {
+                setInputFamilyCode(text);
+                setError(false); // 입력 시 에러 해제
+              }}
             />
+            {error && <Text style={styles.errorText}>가족 코드를 입력해주세요</Text>}
             <TouchableOpacity style={styles.button} onPress={handleFamilyLinkRequest}>
               <Text style={styles.buttonText}>가족 연동하기</Text>
             </TouchableOpacity>
@@ -180,6 +197,24 @@ export default function FamilyLink() {
           </View>
         )}
       </View>
+      <Modal
+          animationType= 'none'
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>{modalMessage}</Text>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.modalButtonText}>확인</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
     </View>
   );
 }
@@ -253,6 +288,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 5,
     color: '#555',
+    marginBottom: 10
   },
   input: {
     borderWidth: 1,
@@ -287,5 +323,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#555',
     marginTop: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#AFB8DA',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '100%',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
