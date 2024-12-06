@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useUserData } from '@/context/UserDataContext';
 
 const NotificationPage = () => {
@@ -37,6 +37,36 @@ const NotificationPage = () => {
     fetchNotifications();
   }, [user?.userId]);
 
+  const handleResponse = async (requestId, acceptOrReject) => {
+    try {
+      const body = {
+        requestUserId: user.userId, // 현재 로그인한 유저의 ID
+        responseUserId: requestId, // 알림에서 받은 requestId를 responseUserId로 사용
+        acceptOrReject, // true(승인) 또는 false(거부)
+      };
+
+      const response = await fetch('http://localhost:8080/api/code/request/result', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error('요청 처리에 실패했습니다.');
+      }
+
+      Alert.alert('성공', acceptOrReject ? '가족 요청을 승인했습니다.' : '가족 요청을 거부했습니다.');
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((notification) => notification.requestId !== requestId)
+      );
+    } catch (err) {
+      Alert.alert('오류', err.message);
+    }
+  };
+
   if (isUserLoading || loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -68,13 +98,13 @@ const NotificationPage = () => {
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={styles.approveButton}
-                  onPress={() => console.log('승인 버튼 클릭:', item.requestId)}
+                  onPress={() => handleResponse(item.requestId, true)} // 승인 버튼
                 >
                   <Text style={styles.buttonText}>승인</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.rejectButton}
-                  onPress={() => console.log('거부 버튼 클릭:', item.requestId)}
+                  onPress={() => handleResponse(item.requestId, false)} // 거부 버튼
                 >
                   <Text style={styles.buttonText}>거부</Text>
                 </TouchableOpacity>
