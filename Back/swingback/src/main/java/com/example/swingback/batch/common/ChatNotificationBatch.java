@@ -171,6 +171,7 @@ public class ChatNotificationBatch {
                 item.setBatchCheckTime(LocalDateTime.now());
 
             } else {
+                log.info("공개 거부 메시지 입니다 , medicationManagementId: {}", item.getMedicationManagementId());
                 return null;
             }
 

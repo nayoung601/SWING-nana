@@ -90,12 +90,19 @@ public class TotalNotificationService {
             throw new CustomException("알림이 존재하지 않습니다.");
         }
 
+        // 수정된 부분: isRead가 true인 항목을 제거
+        List<TotalNotificationEntity> filteredList = notificationEntityList.stream()
+                .filter(entity -> !entity.isRead()) // isRead가 false인 항목만 유지
+                .toList();
+
+
         // 현재 시간을 LocalDateTime으로 가져오기
         LocalDateTime now = LocalDateTime.now();
 
         // 알림 10개의 리스트를 NotificationTableDTO List로 저장함
         // 예정된 알림시간을 넘어간 경우에만 알림페이지에 보여지도록 수정
-        List<NotificationTableDTO> notification = notificationEntityList.stream()
+        // 필터링된 리스트를 NotificationTableDTO로 변환
+        List<NotificationTableDTO> notification = filteredList.stream()
                 .map(entity -> {
                     // ScheduledTime이 LocalDateTime이라고 가정
                     if (entity.getScheduledTime().isBefore(now) || entity.getScheduledTime().isEqual(now)) {
