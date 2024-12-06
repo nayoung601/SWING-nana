@@ -210,6 +210,7 @@ public class MedicineBagSservice {
                 .totalIntakeConfirmed(false)
                 .medicineList(new ArrayList<>())
                 .type(dto.getType())
+                .batchCheckTime(null)
                 .build();
     }
     //약 리스트 추가 및 확인

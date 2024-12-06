@@ -2,6 +2,8 @@ package com.example.swingback.medicine.medicinebag.controller;
 
 import com.example.swingback.error.CustomException;
 import com.example.swingback.medicine.medicationmanagement.dto.MedicationManagementDTO;
+import com.example.swingback.medicine.medicationmanagement.entity.MedicationManagementEntity;
+import com.example.swingback.medicine.medicationmanagement.repository.MedicationManegementRepository;
 import com.example.swingback.medicine.medicinebag.dto.MedicineBagDTO;
 import com.example.swingback.medicine.medicineinput.dto.MedicineInputDTO;
 import com.example.swingback.medicine.medicinebag.service.MedicineBagSservice;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -19,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MedicineBagController {
     private final MedicineBagSservice medicineBagSservice;
+    private final MedicationManegementRepository medicationManegementRepository;
 
     @PostMapping("/api/medicine")
     public ResponseEntity<?> saveUserMedicineBag(@RequestBody MedicineBagDTO medicineBagDTO) {
@@ -57,6 +61,16 @@ public class MedicineBagController {
                 ResponseEntity.status(HttpStatus.OK).build();
 
     }
+
+//    @GetMapping("/api/test")
+//    public ResponseEntity<List<MedicationManagementEntity>> test() {
+//        List<MedicationManagementEntity> pastUnconfirmedMedications = medicationManegementRepository.findPastUnconfirmedMedications(LocalDate.now(), LocalTime.now());
+//        for (MedicationManagementEntity pastUnconfirmedMedication : pastUnconfirmedMedications) {
+//            log.info("MedicationManagementEntity name : {}",pastUnconfirmedMedication.getMedicationManagementId());
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(pastUnconfirmedMedications);
+//    }
+
 
     @ExceptionHandler(CustomException.class) // 코드가 없을경우 400 에러 발생
     public ResponseEntity<String> handleUnauthorizedException(CustomException e) {

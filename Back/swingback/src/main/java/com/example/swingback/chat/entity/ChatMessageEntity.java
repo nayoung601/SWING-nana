@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -35,6 +37,9 @@ public class ChatMessageEntity {
     @ManyToOne
     @JoinColumn(name = "room_id") // 기본키가 아닌 필드를 외래키로 지정할 때 설정
     private ChatRoomEntity chatRoomId; // 채팅방 참조
+
+    @Column(name = "date")
+    private LocalDateTime dateTime;
 
 
 }

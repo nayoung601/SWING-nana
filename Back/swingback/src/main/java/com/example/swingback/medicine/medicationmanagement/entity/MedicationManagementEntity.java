@@ -46,6 +46,13 @@ public class MedicationManagementEntity {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "batch_check")
+    private LocalDateTime batchCheckTime;
+
+    public void setBatchCheckTime(LocalDateTime batchCheckTime) {
+        this.batchCheckTime = batchCheckTime;
+    }
+
     // 약 복용확인 위한 Setter 메서드 추가
     public void setIntakeConfirmed(boolean totalIntakeConfirmed) {
         this.totalIntakeConfirmed = totalIntakeConfirmed;

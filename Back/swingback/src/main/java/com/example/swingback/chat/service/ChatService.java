@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -103,6 +104,7 @@ public class ChatService {
                 .sender(message.getSender())
                 .message(message.getMessage())
                 .type(message.getType())
+                .dateTime(LocalDateTime.now())
                 .build();
         ChatMessageEntity saveMessage = chatMessageRepository.save(entity);
 
@@ -114,6 +116,7 @@ public class ChatService {
                 .sender(saveMessage.getSender())
                 .message(saveMessage.getMessage())
                 .type(saveMessage.getType())
+                .time(saveMessage.getDateTime())
                 .build();
     }
 
@@ -131,6 +134,7 @@ public class ChatService {
                         .sender(entity.getSender())
                         .message(entity.getMessage())
                         .type(entity.getType())
+                        .time(entity.getDateTime())
                         .build())
                 .toList();
     }
