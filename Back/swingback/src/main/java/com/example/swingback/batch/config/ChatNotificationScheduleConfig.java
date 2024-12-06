@@ -21,7 +21,7 @@ public class ChatNotificationScheduleConfig {
     private final JobRegistry jobRegistry;
 
 
-    @Scheduled(cron = "0 */1 * * * *", zone = "Asia/Seoul") // 1분마다
+    @Scheduled(cron = "11 */1 * * * *", zone = "Asia/Seoul") // 1분마다
     public void runSecondJob() throws Exception {
 
         log.info("chatNotificationJob schedule start");

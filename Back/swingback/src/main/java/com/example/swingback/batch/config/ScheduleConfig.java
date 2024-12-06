@@ -21,7 +21,7 @@ public class ScheduleConfig {
 
 //    @Scheduled(cron = "10 * * * * *", zone = "Asia/Seoul") //10초마다
 
-    @Scheduled(cron = "0 */1 * * * *", zone = "Asia/Seoul") // 1분마다
+    @Scheduled(cron = "13 */1 * * * *", zone = "Asia/Seoul") // 1분마다
     public void runFirstJob() throws Exception {
 
         log.info("notificationJob schedule start");
