@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 6,
+    width: 70,
   },
   selectedFamilyText: {
     color: '#FFFFFF',
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
     zIndex: 10,
-    width: 50, 
+    width: 70, 
   },
   dropdownItem: {
     padding: 10,
