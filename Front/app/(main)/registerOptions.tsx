@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 export default function RegisterOptions() {
   const router = useRouter();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isSearchModalVisible, setSearchModalVisible] = useState(false); 
 
   const handleOpenModal = () => {
     setModalVisible(true);
@@ -22,6 +23,22 @@ export default function RegisterOptions() {
   const handleChooseFromAlbum = () => {
     setModalVisible(false);
     router.push('../utils/userPhoto');
+  };
+
+  // '직접입력' 모달
+  const handleOpenSearchModal = () => {
+    setSearchModalVisible(true);
+  };
+  const handleCloseSearchModal = () => {
+    setSearchModalVisible(false);
+  };
+  const handlePrescriptionInput = () => {
+    setSearchModalVisible(false);
+    router.push('../utils/Prescription');
+  };
+  const handleSupplementInput = () => {
+    setSearchModalVisible(false);
+    router.push('../utils/supplement');
   };
 
   return (
@@ -65,7 +82,8 @@ export default function RegisterOptions() {
                 style={styles.icon}
               />
               <Text style={styles.description}>검색을 통해 약을 직접 입력하고 등록하세요!</Text>
-              <TouchableOpacity style={styles.button} onPress={() => router.push('../utils/SearchInput')}>
+              <TouchableOpacity style={styles.button} onPress={handleOpenSearchModal}>
+              {/* <TouchableOpacity style={styles.button} onPress={() => router.push('../utils/SearchInput')}> */}
                 <Text style={styles.buttonText}>등록하기</Text>
               </TouchableOpacity>
             </View>
@@ -127,6 +145,33 @@ export default function RegisterOptions() {
           </View>
         </View>
       </Modal>
+
+
+      {/* 직접입력 모달 */}
+      <Modal
+          visible={isSearchModalVisible}
+          transparent={true}
+          animationType="none"
+          onRequestClose={handleCloseSearchModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity onPress={handlePrescriptionInput} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>처방약 등록하기</Text>
+              </TouchableOpacity>
+              <View style={styles.divider} />
+              <TouchableOpacity onPress={handleSupplementInput} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>영양제 등록하기</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.modalCancelContent}>
+              <TouchableOpacity onPress={handleCloseSearchModal} style={styles.modalCancelButton}>
+                <Text style={styles.modalCancelButtonText}>취소</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
       </View>
   </ScrollView>
   );
