@@ -11,6 +11,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 설정
 import weekday from 'dayjs/plugin/weekday';
 import isToday from 'dayjs/plugin/isToday';
+import Schedule from '@/components/Schedule';
+import { ScrollView } from 'react-native-gesture-handler';
 
 dayjs.extend(weekday);
 dayjs.extend(isToday);
@@ -64,7 +66,7 @@ export default function HomeScreen() {
             <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>{todayDisplay}</Text>
             </View>
-
+            <ScrollView style={styles.scrollContainer}>
             {user && user.userId ? (
                 <MedicationList userId={user.userId} selectedDate={todayFormatted} />
             ) : (
@@ -87,6 +89,14 @@ export default function HomeScreen() {
                     ))}
                 </View>
             </View>
+            {user && user.userId ? (
+                <Schedule userId={user.userId} selectedDate={todayFormatted} />
+            ) : (
+                <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>유저 정보를 불러오는 중입니다.</Text>
+                </View>
+            )}
+            </ScrollView>
         </View>
     );
 }
@@ -163,4 +173,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
+    scrollContainer: {
+        marginBottom:10,
+        marginTop: 2,
+    }
 });

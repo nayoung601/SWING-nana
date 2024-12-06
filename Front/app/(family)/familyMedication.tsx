@@ -2,21 +2,23 @@ import { StyleSheet, View, Text } from 'react-native';
 import React, { useState } from 'react';
 import Calendar from '@/components/Calendar';
 import dayjs from 'dayjs';
+import FamilyMedication from '@/components/FamilyMedication';
+import { useFamilyContext } from '@/context/FamilyContext';
 
-export default function FamilyMedication(){
+export default function FamilyMedicationPage(){
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const { selectedFamily } = useFamilyContext();
 
     return(
       <View style={styles.container}>
         <Calendar selectedDate={selectedDate} onDateChange={setSelectedDate} />
-
-        {/* {user && user.userId ? (
-          <MedicationManagement selectedDate={selectedDate} userId={user.userId} />
-        ) : (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>유저 정보를 불러오는 중입니다.</Text>
-          </View>
-      )} */}
+        {selectedFamily && selectedFamily.userId ? (
+        <FamilyMedication userId={selectedFamily.userId} selectedDate={selectedDate} />
+      ) : (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>가족 구성원을 선택해주세요.</Text>
+        </View>
+      )}
     </View>
       );
   }
