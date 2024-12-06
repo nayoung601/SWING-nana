@@ -25,16 +25,17 @@ const OCRResult: React.FC = () => {
   }>();
 
   const [editableMedicineList, setEditableMedicineList] = useState<Medicine[]>(
-    medicineList ? JSON.parse(medicineList).map((medicine: any) => ({
-      ...medicine,
-      dosagePerIntake: parseInt(medicine.dosagePerIntake.match(/\d+/)?.[0] || '0', 10),
-      frequencyIntake: parseInt(medicine.frequencyIntake.match(/\d+/)?.[0] || '0', 10),
-      durationIntake: parseInt(medicine.durationIntake.match(/\d+/)?.[0] || '0', 10),
-    })) : []
+    medicineList
+      ? JSON.parse(medicineList).map((medicine: any) => ({
+          ...medicine,
+          dosagePerIntake: parseInt(medicine.dosagePerIntake.match(/\d+/)?.[0] || '0', 10),
+          frequencyIntake: parseInt(medicine.frequencyIntake.match(/\d+/)?.[0] || '0', 10),
+          durationIntake: parseInt(medicine.durationIntake.match(/\d+/)?.[0] || '0', 10),
+        }))
+      : []
   );
   const [editableDate, setEditableDate] = useState<string>(registrationDate || '');
   const [isEditing, setIsEditing] = useState(false);
-
 
   const handleInputChange = (index: number, field: keyof Medicine, value: string) => {
     setEditableMedicineList((prevList) => {
@@ -57,18 +58,18 @@ const OCRResult: React.FC = () => {
       dosagePerIntake: 0,
       frequencyIntake: 0,
       durationIntake: 0,
-      morningTimebox: false, // 초기값 설정
-      lunchTimebox: false,   // 초기값 설정
-      dinnerTimebox: false,  // 초기값 설정
-      beforeSleepTimebox: false, // 초기값 설정
+      morningTimebox: false,
+      lunchTimebox: false,
+      dinnerTimebox: false,
+      beforeSleepTimebox: false,
     };
     setEditableMedicineList((prevList) => [...prevList, newMedicine]);
   };
-  
+
   const handleDeleteMedicine = (index: number) => {
-    const updatedList = [...editableMedicineList]; // 현재 약물 리스트 복사
-    updatedList.splice(index, 1); // 해당 인덱스의 약물 삭제
-    setEditableMedicineList(updatedList); // 상태 업데이트
+    const updatedList = [...editableMedicineList];
+    updatedList.splice(index, 1);
+    setEditableMedicineList(updatedList);
   };
 
   const handleRegister = () => {
@@ -98,6 +99,10 @@ const OCRResult: React.FC = () => {
       Alert.alert('유효성 검사 실패', validationErrors.join('\n'));
       return;
     }
+
+    // 등록 시 로그 출력
+    console.log('조제일자:', editableDate);
+    console.log('약물 리스트:', editableMedicineList);
 
     router.push({
       pathname: '../utils/setAlarm',
@@ -149,10 +154,9 @@ const OCRResult: React.FC = () => {
 
             {editableMedicineList.map((medicine, index) => (
               <View key={index} style={styles.medicineContainer}>
-                {/* 삭제 버튼 */}
                 <TouchableOpacity
                   style={styles.deleteButton}
-                  onPress={() => handleDeleteMedicine(index)} // 삭제 기능
+                  onPress={() => handleDeleteMedicine(index)}
                 >
                   <Image
                     source={require('../../assets/images/delete.png')}
@@ -160,135 +164,44 @@ const OCRResult: React.FC = () => {
                   />
                 </TouchableOpacity>
 
-                {Platform.OS === 'web' ? (
-                  <input
-                    type="text"
-                    value={medicine.medicineName}
-                    onChange={(e) =>
-                      handleInputChange(index, 'medicineName', e.target.value)
-                    }
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      marginBottom: 5,
-                      border: '1px solid #6c75bd',
-                      borderRadius: 5,
-                      padding: 5,
-                      backgroundColor: isEditing ? '#f4f4f4' : '#F1F1FA',
-                      textAlign: 'center',
-                      width: '100%',
-                    }}
-                    disabled={!isEditing}
-                  />
-                ) : (
-                  <TextInput
-                    style={[styles.medicineNameInput, isEditing && styles.editModeInput]}
-                    value={medicine.medicineName}
-                    editable={isEditing}
-                    onChangeText={(value) =>
-                      handleInputChange(index, 'medicineName', value)
-                    }
-                  />
-                )}
+                <TextInput
+                  style={[styles.medicineNameInput, isEditing && styles.editModeInput]}
+                  value={medicine.medicineName}
+                  editable={isEditing}
+                  onChangeText={(value) => handleInputChange(index, 'medicineName', value)}
+                />
 
                 <View style={styles.row}>
-                  {Platform.OS === 'web' ? (
-                    <>
-                      <input
-                        type="number"
-                        value={medicine.dosagePerIntake.toString()}
-                        onChange={(e) =>
-                          handleInputChange(index, 'dosagePerIntake', e.target.value)
-                        }
-                        style={{
-                          fontSize: 16,
-                          marginLeft: 5,
-                          marginRight: 5,
-                          padding: 5,
-                          border: '1px solid #6c75bd',
-                          borderRadius: 5,
-                          textAlign: 'center',
-                          width: 50,
-                          backgroundColor: isEditing ? '#f4f4f4' : '#F1F1FA',
-                        }}
-                        disabled={!isEditing}
-                      />
-                      <Text style={styles.unitText}>정</Text>
-                      <input
-                        type="number"
-                        value={medicine.frequencyIntake.toString()}
-                        onChange={(e) =>
-                          handleInputChange(index, 'frequencyIntake', e.target.value)
-                        }
-                        style={{
-                          fontSize: 16,
-                          marginLeft: 5,
-                          marginRight: 5,
-                          padding: 5,
-                          border: '1px solid #6c75bd',
-                          borderRadius: 5,
-                          textAlign: 'center',
-                          width: 50,
-                          backgroundColor: isEditing ? '#f4f4f4' : '#F1F1FA',
-                        }}
-                        disabled={!isEditing}
-                      />
-                      <Text style={styles.unitText}>회</Text>
-                      <input
-                        type="number"
-                        value={medicine.durationIntake.toString()}
-                        onChange={(e) =>
-                          handleInputChange(index, 'durationIntake', e.target.value)
-                        }
-                        style={{
-                          fontSize: 16,
-                          marginLeft: 5,
-                          marginRight: 5,
-                          padding: 5,
-                          border: '1px solid #6c75bd',
-                          borderRadius: 5,
-                          textAlign: 'center',
-                          width: 50,
-                          backgroundColor: isEditing ? '#f4f4f4' : '#F1F1FA',
-                        }}
-                        disabled={!isEditing}
-                      />
-                      <Text style={styles.unitText}>일</Text>
-                    </>
-                  ) : (
-                    <>
-                      <TextInput
-                        style={[styles.input, isEditing && styles.editModeInput]}
-                        value={medicine.dosagePerIntake.toString()}
-                        editable={isEditing}
-                        onChangeText={(value) =>
-                          handleInputChange(index, 'dosagePerIntake', value)
-                        }
-                        keyboardType="numeric"
-                      />
-                      <Text style={styles.unitText}>정</Text>
-                      <TextInput
-                        style={[styles.input, isEditing && styles.editModeInput]}
-                        value={medicine.frequencyIntake.toString()}
-                        editable={isEditing}
-                        onChangeText={(value) =>
-                          handleInputChange(index, 'frequencyIntake', value)
-                        }
-                        keyboardType="numeric"
-                      />
-                      <Text style={styles.unitText}>회</Text>
-                      <TextInput
-                        style={[styles.input, isEditing && styles.editModeInput]}
-                        value={medicine.durationIntake.toString()}
-                        editable={isEditing}
-                        onChangeText={(value) =>
-                          handleInputChange(index, 'durationIntake', value)
-                        }
-                        keyboardType="numeric"
-                      />
-                      <Text style={styles.unitText}>일</Text>
-                    </>
-                  )}
+                  <TextInput
+                    style={[styles.input, isEditing && styles.editModeInput]}
+                    value={medicine.dosagePerIntake.toString()}
+                    editable={isEditing}
+                    onChangeText={(value) =>
+                      handleInputChange(index, 'dosagePerIntake', value)
+                    }
+                    keyboardType="numeric"
+                  />
+                  <Text style={styles.unitText}>정</Text>
+                  <TextInput
+                    style={[styles.input, isEditing && styles.editModeInput]}
+                    value={medicine.frequencyIntake.toString()}
+                    editable={isEditing}
+                    onChangeText={(value) =>
+                      handleInputChange(index, 'frequencyIntake', value)
+                    }
+                    keyboardType="numeric"
+                  />
+                  <Text style={styles.unitText}>회</Text>
+                  <TextInput
+                    style={[styles.input, isEditing && styles.editModeInput]}
+                    value={medicine.durationIntake.toString()}
+                    editable={isEditing}
+                    onChangeText={(value) =>
+                      handleInputChange(index, 'durationIntake', value)
+                    }
+                    keyboardType="numeric"
+                  />
+                  <Text style={styles.unitText}>일</Text>
                 </View>
               </View>
             ))}

@@ -139,10 +139,28 @@ const ChatComponent = () => {
   // 메시지 렌더링 (카카오톡 스타일)
   const renderMessage = ({ item }) => {
     const isMine = item.sender === familyRole;
+    const isSpecialSender = item.sender === 'WIN;C'; // 특정 발신자 조건 추가
+    const messageStyle = [
+      styles.messageContainer,
+      isMine
+        ? styles.myMessage
+        : isSpecialSender
+        ? styles.specialMessage // 특정 발신자의 스타일
+        : styles.otherMessage,
+    ];
+
+    const formattedDate = new Date(item.time).toLocaleDateString();
+    const formattedTime = new Date(item.time).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
     return (
-      <View style={[styles.messageContainer, isMine ? styles.myMessage : styles.otherMessage]}>
-        <Text style={styles.sender}>{isMine ? '나' : item.sender}</Text>
+      <View style={messageStyle}>
+        <View style={styles.messageHeader}>
+          <Text style={styles.sender}>{isMine ? '나' : item.sender}</Text>
+          <Text style={styles.timestamp}>{`${formattedDate} ${formattedTime}`}</Text>
+        </View>
         <Text style={styles.message}>{item.message}</Text>
       </View>
     );
@@ -197,9 +215,24 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: '#ffffff',
   },
+  specialMessage: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFFEC5', // 특정 발신자의 메시지 배경색 (노란색)
+  },
+  messageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   sender: {
     fontSize: 12,
     color: '#888',
+  },
+  timestamp: {
+    fontSize: 10,
+    color: '#aaa',
+    marginLeft: 5,
   },
   message: {
     fontSize: 16,
