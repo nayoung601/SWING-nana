@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView, Image, Modal } from 'react-native';
 
 const MedicationManagement = ({ userId, selectedDate }) => {
     const [medicationData, setMedicationData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false); 
+    const [modalMessage, setModalMessage] = useState('');   
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,6 +73,10 @@ const MedicationManagement = ({ userId, selectedDate }) => {
             );
 
             if (!response.ok) throw new Error('Failed to update all intake status');
+
+            const result = await response.text(); // "100포인트 적립" 같은 메시지 반환
+            setModalMessage(result); // 모달 메시지 설정
+            setModalVisible(true);
 
             setMedicationData((prevData) =>
                 prevData.map((medication) =>
@@ -161,6 +167,24 @@ const MedicationManagement = ({ userId, selectedDate }) => {
             ) : (
                 <Text style={styles.noDataText}>복용 기록이 없습니다</Text>
             )}
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>{modalMessage}</Text>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <Text style={styles.modalButtonText}>확인</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
@@ -265,6 +289,36 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#999',
         marginTop: 20,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    modalButton: {
+        backgroundColor: '#AFB8DA',
+        padding: 10,
+        borderRadius: 5,
+        width: '100%',
+        alignItems: 'center',
+    },
+    modalButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

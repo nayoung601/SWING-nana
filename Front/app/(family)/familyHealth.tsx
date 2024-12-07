@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useFamilyContext } from '@/context/FamilyContext';
-import MedicationList from '@/components/MedicationList';
+import FamilyMedicationList from '@/components/FamilyMedicationList';
 import BloodPressure from '@/components/BloodPressure';
 import BloodSugar from '@/components/BloodSugar';
 import Schedule from'@/components/Schedule';
@@ -129,7 +129,7 @@ export default function FamilyHealth(){
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {selectedFamily?.userId ? (
             <>
-              <MedicationList userId={selectedFamily.userId} selectedDate={selectedDate} />
+              <FamilyMedicationList userId={selectedFamily.userId} selectedDate={selectedDate} />
               <BloodPressure selectedDate={selectedDate} userId={selectedFamily.userId} />
               <BloodSugar selectedDate={selectedDate} userId={selectedFamily.userId} />
               <Schedule selectedDate={selectedDate} userId={selectedFamily.userId} />
