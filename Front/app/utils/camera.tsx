@@ -3,20 +3,21 @@ import {
   Image, StyleSheet, Text, TouchableOpacity, View, Animated, 
   Dimensions, ActivityIndicator, Alert 
 } from 'react-native';
+import { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { PinchGestureHandler, GestureHandlerRootView, PinchGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import Svg, { Rect } from 'react-native-svg'; // SVG 라이브러리로 박스 그리기
 import { useOCRWithParser } from '../../hooks/useOCRWithParser';
-import { PrescriptionInfo } from '../../types/types'; // 타입 불러오기
+import { useRouter } from 'expo-router'; // router 추가
 
-export default function App() {
+export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [zoom, setZoom] = useState(0);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [ocrResult, setOcrResult] = useState<PrescriptionInfo | null>({ prescription_date: "", medicineList: [] }); // OCR 결과로 위치 정보 포함
-  const cameraRef = useRef(null);
+  const cameraRef = useRef<CameraView | null>(null); // CameraView 타입 지정
   const flashAnimation = useRef(new Animated.Value(0)).current;
+  const router = useRouter(); // Router 사용
+  const [backendResponse, setBackendResponse] = useState<any>(null); // 백엔드 응답 상태
 
   const windowHeight = Dimensions.get('window').height;
   const tabBarHeight = 80;
@@ -39,9 +40,8 @@ export default function App() {
   async function takePicture() {
     if (cameraRef.current) {
       const options = { quality: 0.5, base64: true };
-      const { uri } = await (cameraRef.current as any).takePictureAsync(options);
+      const { uri } = await cameraRef.current.takePictureAsync(options);
       setPhotoUri(uri);
-      setOcrResult({ prescription_date: "", medicineList: [] }); // OCR 결과 초기화
     }
   }
 
@@ -50,12 +50,41 @@ export default function App() {
 
     setLoading(true);
     try {
-      const result = await useOCRWithParser(photoUri); // OCR 및 위치 정보 추출
-      setOcrResult(result || { prescription_date: "", medicineList: [] }); // OCR 결과와 위치 정보 저장
-      console.log("전처리 결과:", JSON.stringify(result, null, 2));
+      // useOCRWithParser 호출하여 백엔드 응답 받기
+      const backendData = await useOCRWithParser(photoUri);
+
+      if (backendData === null) {
+        Alert.alert('오류', '텍스트 인식에 실패했습니다.');
+        setLoading(false);
+        return;
+      }
+
+      // 디버깅용 로그 출력
+      console.log('camera.tsx backendData:', backendData);
+
+      // backendResponse 상태 업데이트
+      setBackendResponse(backendData);
+
+      Alert.alert('인식 완료', 'OCR 인식이 완료되었습니다.');
+
+      // OCRResult로 데이터 전달
+      console.log('camera.tsx - Navigating to OCRResult:', {
+        photoUri: photoUri,
+        registrationDate: backendData.registrationDate,
+        medicineList: JSON.stringify(backendData.medicineList),
+      });
+
+      router.push({
+        pathname: '/utils/OCRResult',
+        params: {
+          photoUri: photoUri,
+          registrationDate: backendData.registrationDate,
+          medicineList: JSON.stringify(backendData.medicineList),
+        },
+      });
     } catch (error) {
-      console.error("OCR 실패:", error);
-      Alert.alert("오류", "텍스트 인식에 실패했습니다.");
+      console.error('OCR 실패:', error);
+      Alert.alert('오류', '텍스트 인식에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -80,34 +109,12 @@ export default function App() {
           {photoUri ? (
             <View style={styles.container}>
               <Image source={{ uri: photoUri }} style={styles.capturedPhoto} />
-              
               {loading && (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color="#0000ff" />
                   <Text style={styles.loadingText}>인식 중입니다...</Text>
                 </View>
               )}
-
-              {/* OCR 텍스트 위치에 박스 그리기 */}
-              {ocrResult && (
-                <Svg style={styles.svgOverlay}>
-                  {ocrResult.medicineList.map((medicine, index) => (
-                    medicine.position ? ( // position 속성 유무 확인
-                      <Rect
-                        key={index}
-                        x={medicine.position.x}
-                        y={medicine.position.y}
-                        width={medicine.position.width}
-                        height={medicine.position.height}
-                        stroke="red"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                    ) : null
-                  ))}
-                </Svg>
-              )}
-
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.retakeButton} onPress={() => setPhotoUri(null)}>
                   <Text style={styles.retakeButtonText}>다시 촬영</Text>
@@ -145,14 +152,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-  },
+  } as ViewStyle,
   message: {
     textAlign: 'center',
     paddingBottom: 10,
-  },
+  } as TextStyle,
   camera: {
     width: '100%',
-  },
+    flex: 1,
+  } as ViewStyle,
   shutterButton: {
     position: 'absolute',
     bottom: 80,
@@ -166,17 +174,17 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  } as ViewStyle,
   innerCircle: {
     width: 50,
     height: 50,
     backgroundColor: 'white',
     borderRadius: 25,
-  },
+  } as ViewStyle,
   capturedPhoto: {
     width: '100%',
     height: '100%',
-  },
+  } as ImageStyle,
   flashOverlay: {
     position: 'absolute',
     top: 0,
@@ -185,19 +193,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'white',
     opacity: 0,
-  },
+  } as ViewStyle,
   loadingContainer: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: [{ translateX: -50 }, { translateY: -50 }],
     alignItems: 'center',
-  },
+  } as ViewStyle,
   loadingText: {
     marginTop: 10,
     fontSize: 18,
     color: 'black',
-  },
+  } as TextStyle,
   buttonContainer: {
     position: 'absolute',
     bottom: 50,
@@ -205,7 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '80%',
     alignSelf: 'center',
-  },
+  } as ViewStyle,
   retakeButton: {
     flex: 1,
     marginRight: 5,
@@ -213,7 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(108, 110, 140, 0.7)',
     borderRadius: 5,
     alignItems: 'center',
-  },
+  } as ViewStyle,
   detectButton: {
     flex: 1,
     marginLeft: 5,
@@ -221,20 +229,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(160, 164, 242, 0.7)',
     borderRadius: 5,
     alignItems: 'center',
-  },
+  } as ViewStyle,
   retakeButtonText: {
     color: 'white',
     fontSize: 16,
-  },
+  } as TextStyle,
   detectButtonText: {
     color: 'white',
     fontSize: 16,
-  },
-  svgOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+  } as TextStyle,
 });
