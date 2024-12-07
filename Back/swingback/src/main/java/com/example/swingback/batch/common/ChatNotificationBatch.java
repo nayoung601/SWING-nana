@@ -112,7 +112,7 @@ public class ChatNotificationBatch {
 
 
             //예약시간
-            LocalTime scheduleTime = item.getNotificationTime();
+            LocalDateTime scheduleTime = item.getNotificationDate().atTime(item.getNotificationTime());
             //채팅방 id
             String roomId = item.getMedicineBag().getUserId().getFamily().getFamilyId();
 
