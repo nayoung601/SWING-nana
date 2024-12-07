@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     confirmed: {
-        backgroundColor: '#d4edda',
+        backgroundColor: '#FFA18C',
     },
     pending: {
         backgroundColor: '#f8d7da',
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     },
     allIntakeButton: {
         marginTop: 10,
-        backgroundColor: '#007bff',
+        backgroundColor: '#7686DB',
         borderRadius: 6,
         paddingVertical: 10,
         alignItems: 'center',
