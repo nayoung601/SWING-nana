@@ -1,3 +1,4 @@
+// Medicine 인터페이스 수정 (새로운 필드 정의)
 export interface Medicine {
   medicineName: string; // 약물 이름
   dosagePerIntake: number; // 1회 복용량
